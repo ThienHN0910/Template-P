@@ -11,6 +11,7 @@ out/
 .next/
 .nuxt/
 .output/
+packages/cli/templates/
 
 # Environment Variables & Secrets (CRITICAL: ZERO-LEAKAGE)
 .env

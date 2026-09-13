@@ -8,8 +8,14 @@
   },
   "type": "module",
   "main": "./dist/index.js",
+  "files": [
+    "dist",
+    "bin",
+    "templates",
+    "README.md"
+  ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node ./scripts/copy-templates.js",
     "dev": "tsup --watch",
     "prepublishOnly": "npm run build"
   },
