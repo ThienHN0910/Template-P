@@ -1,10 +1,13 @@
 {
-  "name": "create-p-stack",
+  "name": "@thienhn/create-template",
   "version": "1.0.0",
   "description": "Interactive CLI Scaffolder for Universal Fullstack Projects with AI Agent Skills",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
-    "create-p-stack": "./bin/create-p-stack.js",
-    "template-p": "./bin/create-p-stack.js"
+    "create-template": "./bin/create-template.js",
+    "create-p-stack": "./bin/create-template.js"
   },
   "type": "module",
   "main": "./dist/index.js",

@@ -1,21 +1,21 @@
-# create-p-stack
+# @thienhn/create-template
 
 > The Universal Fullstack CLI Scaffolder with Official Upstream Framework Generators & 52 Production AI Agent Skills.
 
-`create-p-stack` is an interactive CLI scaffolder that bootstraps production-grade fullstack monorepos in seconds.
+`@thienhn/create-template` is an interactive CLI scaffolder that bootstraps production-grade fullstack monorepos in seconds.
 
 ## 🚀 Quick Start
 
 Run directly via `npx` (no installation required):
 
 ```bash
-npx create-p-stack my-app
+npx @thienhn/create-template my-app
 ```
 
 Or run interactively:
 
 ```bash
-npx create-p-stack
+npx @thienhn/create-template
 ```
 
 ## 🛠️ Supported Frameworks & Stacks

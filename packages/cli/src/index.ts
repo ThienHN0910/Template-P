@@ -32,7 +32,7 @@ export async function run() {
 
   const program = new Command();
   program
-    .name('create-p-stack')
+    .name('create-template')
     .description('Universal Fullstack CLI Scaffolder & GitHub Template Engine')
     .argument('[project-name]', 'Name of the project directory')
     .option('-b, --backend <type>', 'Backend framework (dotnet, node, fastapi)')
@@ -49,7 +49,7 @@ export async function run() {
   const rawArgName = program.args[0];
 
   console.clear();
-  p.intro(pc.bgCyan(pc.black(' CREATE-P-STACK ')) + pc.bold(' Universal Fullstack & AI Agent Scaffolder'));
+  p.intro(pc.bgCyan(pc.black(' CREATE-TEMPLATE ')) + pc.bold(' Universal Fullstack & AI Agent Scaffolder'));
 
   let projectName = rawArgName || 'my-p-app';
   let packageManager: PackageManager = (options.packageManager as PackageManager) || (options.pm as PackageManager) || 'pnpm';
