@@ -10,6 +10,7 @@ import { generateEnvPair } from './env-generator.js';
 import { generateAgentsMarkdown, generateClaudeMarkdown, generateCursorRules } from './ai-tailor.js';
 import { scaffoldHybridFrontend } from './hybrid-frontend.js';
 import { installDynamicSkills } from './dynamic-skills.js';
+import { generateIdeConfigs } from './ide-generator.js';
 
 export function getTemplatesDir(): string {
   const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -165,13 +166,22 @@ export async function scaffoldProject(config: ProjectConfig): Promise<void> {
     await fsp.writeFile(path.join(targetDir, 'docker-compose.yml'), dockerCompose, 'utf-8');
   }
 
-  // 10. Install AI Agent Skills via skills.sh (npx skills add) + Offline Fallback
+  // 10. Generate Tailored IDE Configurations (.vscode, extensions.json, settings.json)
+  await generateIdeConfigs(config);
+
+  // 11. Install AI Agent Skills via skills.sh (npx skills add) + Offline Fallback
   await installDynamicSkills(config, templatesDir);
 
-  // 11. Generate Tailored AI Context Files (AGENTS.md, CLAUDE.md, .cursorrules)
+  // 12. Generate Tailored AI Context Files (AGENTS.md, CLAUDE.md, .cursorrules)
   await fsp.writeFile(path.join(targetDir, 'AGENTS.md'), generateAgentsMarkdown(config), 'utf-8');
-  await fsp.writeFile(path.join(targetDir, 'CLAUDE.md'), generateClaudeMarkdown(config), 'utf-8');
-  await fsp.writeFile(path.join(targetDir, '.cursorrules'), generateCursorRules(config), 'utf-8');
+
+  const selectedAgents = Array.isArray(config.ai?.agents) ? config.ai.agents : ['gemini', 'claude', 'cursor'];
+  if (selectedAgents.includes('claude') || selectedAgents.includes('all')) {
+    await fsp.writeFile(path.join(targetDir, 'CLAUDE.md'), generateClaudeMarkdown(config), 'utf-8');
+  }
+  if (selectedAgents.includes('cursor') || selectedAgents.includes('all')) {
+    await fsp.writeFile(path.join(targetDir, '.cursorrules'), generateCursorRules(config), 'utf-8');
+  }
 
   // 12. Create docs directory
   const docsDir = path.join(targetDir, 'docs', 'adr');

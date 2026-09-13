@@ -31,8 +31,17 @@
     "agent-skills",
     "mcp"
   ],
-  "author": "Antigravity Pair Programmer",
+  "author": "ThienHN0910",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThienHN0910/Template-P.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/ThienHN0910/Template-P#readme",
+  "bugs": {
+    "url": "https://github.com/ThienHN0910/Template-P/issues"
+  },
   "dependencies": {
     "@clack/prompts": "^0.9.1",
     "commander": "^13.1.0",

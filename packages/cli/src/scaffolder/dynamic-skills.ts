@@ -6,53 +6,51 @@ import { ProjectConfig } from '../types.js';
 
 export async function installDynamicSkills(config: ProjectConfig, templatesDir: string): Promise<void> {
   const { targetDir, ai } = config;
-  const geminiSkillsDir = path.join(targetDir, '.gemini', 'skills');
-  const claudeSkillsDir = path.join(targetDir, '.claude', 'skills');
-  await fsp.mkdir(geminiSkillsDir, { recursive: true });
-  await fsp.mkdir(claudeSkillsDir, { recursive: true });
+  const agents = Array.isArray(ai?.agents) && ai.agents.length > 0 ? ai.agents : ['gemini', 'claude', 'cursor'];
+  const isAll = agents.includes('all');
+
+  // Determine which target directories to create
+  const agentDirs: string[] = [];
+  if (isAll || agents.includes('gemini')) agentDirs.push(path.join(targetDir, '.gemini', 'skills'));
+  if (isAll || agents.includes('claude')) agentDirs.push(path.join(targetDir, '.claude', 'skills'));
+  if (isAll || agents.includes('cursor')) agentDirs.push(path.join(targetDir, '.cursor', 'skills'));
+  if (isAll || agents.includes('windsurf')) agentDirs.push(path.join(targetDir, '.windsurf', 'skills'));
+  if (isAll || agents.includes('roo')) agentDirs.push(path.join(targetDir, '.roo', 'skills'));
+
+  for (const d of agentDirs) {
+    await fsp.mkdir(d, { recursive: true });
+  }
 
   const packages = Array.isArray(ai?.packages) ? ai.packages : [];
+  const agentParam = isAll ? '*' : agents.join(',');
+
   for (const pkg of packages) {
     if (pkg.includes('/')) {
-      // It's a GitHub repo package like mattpocock/skills or vercel-labs/agent-skills
+      // GitHub repo package (e.g. mattpocock/skills)
       let onlineSuccess = false;
       try {
-        await execa('npx', ['skills@latest', 'add', pkg, '--agent', '*', '--all', '--copy', '-y'], {
+        await execa('npx', ['skills@latest', 'add', pkg, '--agent', agentParam, '--all', '--copy', '-y'], {
           cwd: targetDir,
           timeout: 25000,
           stdio: 'pipe',
         });
         onlineSuccess = true;
-
-        // Mirror skills from .claude/skills to .gemini/skills if needed
-        if (fs.existsSync(claudeSkillsDir)) {
-          const skills = await fsp.readdir(claudeSkillsDir);
-          for (const s of skills) {
-            const src = path.join(claudeSkillsDir, s);
-            const dst = path.join(geminiSkillsDir, s);
-            if (!fs.existsSync(dst)) {
-              await fsp.cp(src, dst, { recursive: true });
-            }
-          }
-        }
       } catch {
         onlineSuccess = false;
       }
 
-      // Offline Fallback / Ensure all 37 Pocock skills are present
+      // Offline Fallback / Ensure all Pocock skills are present in selected agent dirs
       if ((!onlineSuccess || pkg === 'mattpocock/skills') && pkg === 'mattpocock/skills') {
         const fallbackSource = path.join(templatesDir, 'skills', 'pocock');
         if (fs.existsSync(fallbackSource)) {
           const items = await fsp.readdir(fallbackSource);
           for (const item of items) {
             const src = path.join(fallbackSource, item);
-            const dstGemini = path.join(geminiSkillsDir, item);
-            const dstClaude = path.join(claudeSkillsDir, item);
-            if (!fs.existsSync(dstGemini)) {
-              await fsp.cp(src, dstGemini, { recursive: true });
-            }
-            if (!fs.existsSync(dstClaude)) {
-              await fsp.cp(src, dstClaude, { recursive: true });
+            for (const d of agentDirs) {
+              const dst = path.join(d, item);
+              if (!fs.existsSync(dst)) {
+                await fsp.cp(src, dst, { recursive: true });
+              }
             }
           }
         }
@@ -60,14 +58,37 @@ export async function installDynamicSkills(config: ProjectConfig, templatesDir: 
     } else if (pkg === 'taste') {
       const tasteSource = path.join(templatesDir, 'skills', 'taste');
       if (fs.existsSync(tasteSource)) {
-        await fsp.cp(tasteSource, geminiSkillsDir, { recursive: true });
-        await fsp.cp(tasteSource, claudeSkillsDir, { recursive: true });
+        for (const d of agentDirs) {
+          await fsp.cp(tasteSource, d, { recursive: true });
+        }
       }
     } else if (pkg === 'ponytail') {
       const ptSource = path.join(templatesDir, 'skills', 'ponytail');
       if (fs.existsSync(ptSource)) {
-        await fsp.cp(ptSource, geminiSkillsDir, { recursive: true });
-        await fsp.cp(ptSource, claudeSkillsDir, { recursive: true });
+        for (const d of agentDirs) {
+          await fsp.cp(ptSource, d, { recursive: true });
+        }
+      }
+    }
+  }
+
+  // Clean up any unrequested agent dot-directories if --agent wasn't 'all'
+  if (!isAll) {
+    const rogueAgents = [
+      '.adal', '.aider-desk', '.augment', '.autohand', '.bob', '.codeartsdoer',
+      '.codebuddy', '.codemaker', '.codestudio', '.commandcode', '.continue',
+      '.cortex', '.crush', '.devin', '.forge', '.fx', '.goose', '.grok',
+      '.hermes', '.iflow', '.inferencesh', '.jazz', '.junie', '.kimchi',
+      '.kiro', '.kode', '.lingma', '.mcpjam', '.minimax', '.moxby', '.mux',
+      '.neovate', '.ona', '.openhands', '.pi', '.pochi', '.posit', '.qoder',
+      '.qwen', '.reasonix', '.rovodev', '.tabnine', '.terramind', '.tinycloud',
+      '.trae', '.vibe', '.zcode', '.zencoder', 'agent'
+    ];
+
+    for (const rogue of rogueAgents) {
+      const roguePath = path.join(targetDir, rogue);
+      if (fs.existsSync(roguePath)) {
+        await fsp.rm(roguePath, { recursive: true, force: true }).catch(() => {});
       }
     }
   }
@@ -79,8 +100,11 @@ export async function installDynamicSkills(config: ProjectConfig, templatesDir: 
     if (fs.existsSync(mcpSource)) {
       let mcpContent = await fsp.readFile(mcpSource, 'utf-8');
       mcpContent = mcpContent.replaceAll('__DB_NAME__', dbName);
-      await fsp.writeFile(path.join(targetDir, '.gemini', 'mcp.json'), mcpContent, 'utf-8');
       await fsp.writeFile(path.join(targetDir, 'mcp.json'), mcpContent, 'utf-8');
+      if (agents.includes('gemini') || isAll) {
+        await fsp.mkdir(path.join(targetDir, '.gemini'), { recursive: true });
+        await fsp.writeFile(path.join(targetDir, '.gemini', 'mcp.json'), mcpContent, 'utf-8');
+      }
     }
   }
 }

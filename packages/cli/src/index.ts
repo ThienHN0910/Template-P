@@ -9,11 +9,19 @@ import {
   promptBackend,
   promptDatabase,
   promptFrontend,
+  promptIde,
   promptAiSkills,
 } from './prompts/index.js';
 import { inspectEnvironment, handleMissingTools } from './installer/index.js';
 import { scaffoldProject } from './scaffolder/index.js';
-import { ProjectConfig, BackendType, FrontendType, DatabaseChoice, PackageManager } from './types.js';
+import {
+  ProjectConfig,
+  BackendType,
+  FrontendType,
+  DatabaseChoice,
+  PackageManager,
+  IdeChoice,
+} from './types.js';
 
 export async function run() {
   // Handle graceful Ctrl+C
@@ -65,7 +73,9 @@ export async function run() {
       i18n: true,
     },
   };
+  let ide: IdeChoice[] = ['vscode'];
   let ai: AiSkillsChoice = {
+    agents: ['gemini', 'claude', 'cursor'],
     packages: ['mattpocock/skills', 'taste', 'ponytail'],
     mcp: true,
   };
@@ -114,7 +124,10 @@ export async function run() {
     // 6. Frontend & Features
     frontend = await promptFrontend();
 
-    // 7. AI Skills & MCP Bundle
+    // 7. Editor & IDE Selection
+    ide = await promptIde();
+
+    // 8. AI Coding Agents & Skills Bundle
     ai = await promptAiSkills();
   } else {
     p.log.info(pc.dim('Non-interactive mode: Using configured flags or sensible defaults.'));
@@ -128,6 +141,7 @@ export async function run() {
     backend,
     database,
     frontend,
+    ide,
     ai,
     targetDir,
   };

@@ -8,7 +8,8 @@
     "build": "pnpm --filter ./packages/cli build",
     "dev": "pnpm --filter ./packages/cli dev",
     "create": "node ./packages/cli/bin/create-p-stack.js",
-    "init": "node ./scripts/init.js"
+    "init": "node ./scripts/init.js",
+    "publish-cli": "npm --prefix packages/cli publish --access public"
   },
   "keywords": [
     "cli",
