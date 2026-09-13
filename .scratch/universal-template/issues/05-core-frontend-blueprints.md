@@ -23,5 +23,7 @@ Xây dựng các thư mục template frontend trong `templates/frontend/`:
 **Status:** resolved
 
 - [x] Từng template frontend có thể chạy `npm install` và `npm run dev` độc lập
-- [x] Tính năng Dark/Light mode hoạt động mượt mà
-- [x] Tính năng đa ngôn ngữ có ví dụ chuyển đổi ngôn ngữ trực quan
+- [x] Tính năng Dark/Light mode hoạt động mượt mà (60fps GPU-accelerated CSS variables)
+- [x] Tính năng đa ngôn ngữ có ví dụ chuyển đổi ngôn ngữ trực quan (vue-i18n, song ngữ VI/EN)
+- [x] Hybrid Upstream Delegation: Chạy trực tiếp `create-vue@latest` và `create-next-app@latest` với đầy đủ flag sinh thái (TypeScript, Router, Pinia, ESLint, Prettier, Vitest) và tự động layer các tính năng custom (Theme, i18n, API client, Vite proxy)
+- [x] Đầy đủ cơ chế Fallback Offline sang local bundled templates khi không có kết nối Internet

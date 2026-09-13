@@ -20,3 +20,5 @@ Xây dựng thư mục `templates/skills/` và `templates/mcp/`:
 
 - [x] Các file SKILL.md có metadata YAML chuẩn và hướng dẫn sử dụng chi tiết
 - [x] File cấu hình MCP không chứa secret thật, có chú thích tham số rõ ràng
+- [x] Tích hợp skills.sh engine: Hỗ trợ cài đặt bất kỳ repository skills nào qua `npx skills@latest add <repo>`
+- [x] Đóng gói trọn bộ 52 production-grade AI Skills (37 Matt Pocock skills, 10 Taste UI skills, 5 Ponytail skills) trong offline bundle, tự động đồng bộ sang `.gemini/skills`, `.claude/skills`, `.cursorrules` và `mcp.json`
