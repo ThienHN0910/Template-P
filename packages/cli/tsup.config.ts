@@ -3,10 +3,14 @@ import { defineConfig } from 'tsup';
 export default defineConfig({
   entry: ['src/index.ts'],
   format: ['esm'],
-  dts: true,
+  platform: 'node',
+  target: 'node18',
   clean: true,
-  shims: true,
+  noExternal: [/.*/],
   banner: {
-    js: '#!/usr/bin/env node',
+    js: `#!/usr/bin/env node
+import { createRequire as __createRequire } from 'node:module';
+var require = __createRequire(import.meta.url);
+`,
   },
 });

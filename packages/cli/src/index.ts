@@ -1,7 +1,7 @@
 import * as p from '@clack/prompts';
 import pc from 'picocolors';
 import path from 'path';
-import fs from 'fs-extra';
+import fs from 'node:fs';
 import { Command } from 'commander';
 import {
   promptProjectName,
