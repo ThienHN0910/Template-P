@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-chrome-devtools"],
+      "description": "Chrome DevTools inspection, console logs, network monitoring, and DOM inspection"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./"],
+      "description": "Secure local workspace filesystem access for AI assistants"
+    },
+    "database": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "postgresql://postgres:postgres@localhost:5432/__DB_NAME__"],
+      "description": "Read-only and schema inspection database connection for AI assistants"
+    }
+  }
+}

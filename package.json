@@ -1,0 +1,34 @@
+{
+  "name": "template-p",
+  "version": "1.0.0",
+  "description": "Universal Fullstack CLI Scaffolder & GitHub Template Engine",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm --filter ./packages/cli build",
+    "dev": "pnpm --filter ./packages/cli dev",
+    "create": "node ./packages/cli/bin/create-p-stack.js",
+    "init": "node ./scripts/init.js"
+  },
+  "keywords": [
+    "cli",
+    "scaffolder",
+    "template",
+    "fullstack",
+    "dotnet",
+    "vue",
+    "react",
+    "fastapi",
+    "ai-agent",
+    "mcp"
+  ],
+  "author": "Antigravity Pair Programmer",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  },
+  "packageManager": "pnpm@11.15.1+sha512.81350b07e53c9538a02f1f2303b4290fa2d7be04e56e2a970c4cc4b417dc761de196edabd49d55c7dc9580db81007c44143e4e3d7e462b3000d23c255122d065"
+}
