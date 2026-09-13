@@ -1,95 +1,126 @@
-# Universal Fullstack Template & Interactive CLI Scaffolder (`create-p-stack`)
+# Universal Fullstack Template & CLI Engine (`@thienhn/create-template`)
 
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
-[![.NET 8](https://img.shields.io/badge/.NET-8.0_LTS-512BD4.svg)](https://dotnet.microsoft.com/)
-[![Vue 3](https://img.shields.io/badge/Vue-3.5-4FC08D.svg)](https://vuejs.org/)
-[![React](https://img.shields.io/badge/React-18%2F19-61DAFB.svg)](https://react.dev/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](https://fastapi.tiangolo.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <a href="https://www.npmjs.com/package/@thienhn/create-template"><img src="https://img.shields.io/npm/v/@thienhn/create-template.svg?style=flat-square&color=cb3837" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@thienhn/create-template"><img src="https://img.shields.io/npm/dm/@thienhn/create-template.svg?style=flat-square" alt="npm downloads" /></a>
+  <a href="https://github.com/ThienHN0910/Template-P/discussions"><img src="https://img.shields.io/badge/Discussions-Join%20Community-blue?style=flat-square&logo=github" alt="GitHub Discussions" /></a>
+  <a href="https://github.com/ThienHN0910/Template-P/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License: MIT" /></a>
+  <a href="https://github.com/ThienHN0910/Template-P/pulls"><img src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a>
+</p>
 
-> **The Ultimate Universal Scaffolder & GitHub Template**: Khởi tạo dự án Fullstack chuẩn mực sản xuất chỉ trong 30 giây với giao diện Terminal tương tác, tự động kiểm tra runtime môi trường, tích hợp sẵn Database Docker Compose, và trang bị đầy đủ bộ siêu năng lực AI Agent Skills + MCP Servers.
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-5.7-blue.svg?style=flat-square&logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/.NET-8.0_LTS-512BD4.svg?style=flat-square&logo=dotnet" alt=".NET 8" />
+  <img src="https://img.shields.io/badge/Vue-3.5-4FC08D.svg?style=flat-square&logo=vue.js" alt="Vue 3" />
+  <img src="https://img.shields.io/badge/React-18%2F19-61DAFB.svg?style=flat-square&logo=react" alt="React" />
+  <img src="https://img.shields.io/badge/Next.js-15-black.svg?style=flat-square&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/FastAPI-0.115-009688.svg?style=flat-square&logo=fastapi" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Docker-Postgres%20%7C%20MySQL-2496ED.svg?style=flat-square&logo=docker" alt="Docker" />
+</p>
+
+> **The Ultimate Universal Scaffolder & GitHub Template**: Khởi tạo dự án Fullstack chuẩn mực sản xuất chỉ trong 30 giây với giao diện Terminal tương tác, tự động kiểm tra runtime môi trường, tích hợp sẵn Database Docker Compose, cấu hình IDE may đo, và đóng gói sẵn 52 AI Agent Skills + MCP Servers.
 
 ---
 
 ## 🌟 Điểm Nổi Bật (Key Features)
 
 - ⚡ **2 Chế độ Sử dụng Tiện lợi**:
-  1. **NPX Trực tiếp**: Chạy `npx create-p-stack <tên-dự-án>` ở bất kỳ máy nào mà không cần cài trước.
+  1. **NPX Trực tiếp**: Chạy `npx @thienhn/create-template <tên-dự-án>` ở bất kỳ máy nào mà không cần cài trước.
   2. **GitHub Template Repository**: Nhấn **"Use this template"** trên GitHub, clone về máy và gõ `npm run init`.
 - 🎯 **Giao diện Tương tác Terminal Hiện đại** (`@clack/prompts`):
-  - Hỗ trợ phím mũi tên di chuyển.
+  - Phím mũi tên di chuyển.
   - Phím **`<Space>`** để bật/tắt nhiều tùy chọn cùng lúc (Multi-select).
   - Phím **`<Enter>`** để xác nhận (hoặc nhấn Enter nhận ngay tên mặc định `my-p-app`).
 - 🛠️ **Pre-flight Check & Tự Động Cài Đặt Môi Trường**:
   - Tự động phát hiện xem máy đã cài `dotnet`, `node`, hay `python` chưa.
-  - Hỏi người dùng và tự động kích hoạt Package Manager của hệ điều hành (`winget` trên Windows, `brew` trên macOS, `apt` trên Linux) để cài đặt phiên bản phù hợp.
-  - Xử lý lỗi quyền Administrator/Sudo mượt mà, cung cấp link tải chính thức và cơ chế fallback an toàn.
+  - Tự động kích hoạt Package Manager của hệ điều hành (`winget` trên Windows, `brew` trên macOS, `apt` trên Linux) để cài đặt nếu còn thiếu.
 - 🏗️ **Ma trận Kiến trúc Backend Chuyên nghiệp**:
   - **.NET 8 LTS (C#)**:
-    - Clean Architecture / DDD (Domain-Driven Design) chuẩn 4 layer: `Domain`, `Application`, `Infrastructure`, `API`.
+    - Clean Architecture / DDD chuẩn 4 layer: `Domain`, `Application`, `Infrastructure`, `API`.
     - Classic Web API (MVC pattern).
     - Minimal Blank API.
   - **Node.js (TypeScript)**:
     - Express + Clean Architecture / DDD.
     - Fastify + Modular Plugins.
-    - Blank TypeScript Server.
+    - Blank Minimal TypeScript Server.
   - **FastAPI (Python)**:
     - Modular Architecture (Routers, Schemas, Services, SQLModel).
     - Minimal Blank FastAPI.
-- 🗄️ **Tùy chọn Database & Tự Động Sinh Docker Compose**:
-  - Hỗ trợ **PostgreSQL**, **MySQL / MariaDB**, **SQLite**, hoặc **None**.
-  - Tự động cấu hình ORM tương ứng (EF Core cho .NET, Prisma/Drizzle cho Node, SQLModel cho Python).
-  - Tự động sinh file `docker-compose.yml` (cho Postgres/MySQL) kèm healthcheck, pgAdmin/Adminer.
-  - Tự động sinh file `.env` cục bộ và `.env.example` an toàn theo quy tắc **Zero-Leakage Security**.
-- 🎨 **Frontend Đỉnh cao & Trải nghiệm Người dùng**:
-  - Hỗ trợ: **Vue 3** (Vite + Pinia), **React** (Vite), **Next.js** (App Router), **Nuxt 3**.
-  - Tích hợp sẵn:
-    - 🌓 **Theme Switcher (Dark / Light mode)**: Tối ưu theo tiêu chuẩn 60fps GPU-accelerated.
-    - 💅 **SCSS Preprocessor**: Mixins, responsive breakpoints và biến giao diện.
+- 🎨 **Kiến Trúc Hybrid Upstream Frontend & Custom Layering**:
+  - Tích hợp trực tiếp generator chính thức của framework (`create-vue@latest`, `create-next-app@latest`, React Vite, Nuxt 3) với trọn bộ feature flags (TypeScript, Router, Pinia, ESLint, Prettier, Vitest).
+  - **Tự động chồng lớp (Custom Layers)**:
+    - 🌓 **Theme Switcher (Dark / Light mode)**: Tối ưu chuẩn phần cứng 60fps GPU-accelerated.
+    - 💅 **SCSS & Tailwind CSS Preprocessors**.
     - 🌐 **Đa ngôn ngữ i18n**: Cấu hình sẵn song ngữ Anh - Việt.
-    - 🔌 **API Proxy chống lỗi CORS**: Frontend tự động trỏ request `/api` tới đúng port của Backend.
-- 🤖 **Bộ Siêu Năng Lực AI Agent & MCP Tích Hợp Sẵn**:
-  - **Matt Pocock's Skills**: `to-tickets`, `to-spec`, `grill-me`, `domain-modeling`, `triage`, `setup-matt-pocock-skills`.
-  - **Frontend Taste Skills**: `design-taste-frontend`, `minimalist-ui`.
-  - **Ponytail Engine**: Bộ quy tắc chống over-engineering và review mã nguồn tinh gọn.
-  - **MCP Servers Config** (`mcp.json`): Cấu hình sẵn Chrome DevTools, Filesystem, Database.
-  - Tự động sinh `AGENTS.md`, `CLAUDE.md`, `.cursorrules` được may đo theo đúng công nghệ bạn chọn.
+    - 🔌 **API Client & Reverse Proxy**: Gọi trực tiếp `/api` không sợ lỗi CORS.
+- 💻 **Tùy Chọn IDE & Loại Bỏ Triệt Để Thư Mục Rác (Zero Repo Pollution)**:
+  - Cho phép người dùng chọn IDE đang sử dụng: **VS Code / Cursor**, **Visual Studio**, **JetBrains Rider / WebStorm** hoặc **Minimal**.
+  - Tự động may đo `.vscode/extensions.json` và `settings.json` đúng theo tech stack đã chọn.
+  - Cho phép chọn trợ lý AI: **Antigravity / Gemini**, **Claude Code**, **Cursor**, **Windsurf**, **Roo Code**.
+  - Không sinh thừa bất kỳ thư mục rác nào ngoài các công cụ bạn đã chọn.
+- 🗄️ **Tùy chọn Database & Tự Động Sinh Docker Compose**:
+  - Hỗ trợ **PostgreSQL 16 Alpine**, **MySQL 8.4**, **SQLite**, hoặc **None**.
+  - Tự động sinh `docker-compose.yml` kèm healthcheck và giao diện quản trị (pgAdmin / phpMyAdmin).
+  - Tự động sinh file `.env` cục bộ và `.env.example` an toàn theo chuẩn **Zero-Leakage Security**.
+- 🤖 **Đóng Gói Sẵn 52 Production AI Agent Skills & MCP**:
+  - **37 Matt Pocock Skills**: `ask-matt`, `to-tickets`, `to-spec`, `grill-me`, `domain-modeling`, `triage`, `tdd`, `code-review`, `wayfinder`...
+  - **10 Design Taste Skills**: `design-taste-frontend`, `high-end-visual-design`, `industrial-brutalist-ui`, `minimalist-ui`, `image-to-code`...
+  - **5 Ponytail Anti-Over-Engineering Skills**: `ponytail`, `ponytail-review`, `ponytail-audit`, `ponytail-gain`, `ponytail-help`.
+  - **MCP Servers** (`mcp.json`): Chrome DevTools, Filesystem, Database connectors.
 
 ---
 
-## 🚀 Hướng Dẫn Sử Dụng (Quickstart)
+## 🚀 Hướng Dẫn Sử Dụng (Quick Start)
 
 ### Cách 1: Sử dụng qua lệnh NPX (Khuyến nghị)
 
-Mở terminal bất kỳ và chạy:
-
 ```bash
-npx create-p-stack my-app
+npx @thienhn/create-template my-app
 ```
 
-*Nếu bạn muốn chạy không cần hỏi (Non-interactive mode) với cấu hình mặc định:*
+Hoặc chạy chế độ tương tác:
 ```bash
-npx create-p-stack my-app --backend dotnet --arch webapi-ddd --frontend vue3 --db postgres --yes
+npx @thienhn/create-template
 ```
+
+#### Chế độ Tự Động / CI (Non-interactive Mode với CLI Flags):
+```bash
+npx @thienhn/create-template my-app \
+  --backend dotnet \
+  --arch webapi-ddd \
+  --frontend vue3 \
+  --db postgres \
+  --pm pnpm \
+  --yes
+```
+
+| Flag | Rút gọn | Tùy chọn | Mô tả |
+|---|---|---|---|
+| `--backend` | `-b` | `dotnet`, `node`, `fastapi` | Framework backend |
+| `--arch` | `-a` | `webapi-ddd`, `webapi-mvc`, `express-ddd`, `fastify-clean`, `modular`, `blank` | Kiến trúc backend |
+| `--frontend` | `-f` | `vue3`, `react`, `nextjs`, `nuxt3` | Framework frontend |
+| `--db`, `--database` | `-d` | `postgres`, `mysql`, `sqlite`, `none` | Động cơ Database |
+| `--pm`, `--package-manager` | `-p` | `pnpm`, `npm`, `bun` | Trình quản lý gói |
+| `--yes` | `-y` | | Bỏ qua hỏi đáp, dùng cấu hình mặc định |
 
 ---
 
 ### Cách 2: Sử dụng làm GitHub Template
 
-1. Nhấn nút **"Use this template"** ở đầu trang GitHub repo này để tạo repo mới của bạn.
+1. Nhấn nút **"Use this template"** ở đầu trang GitHub repo này để tạo repo mới.
 2. Clone repo mới về máy:
    ```bash
-   git clone <your-new-repo-url>
+   git clone https://github.com/<username>/<your-new-repo>.git
    cd <your-new-repo>
    ```
-3. Chạy wizard khởi tạo:
+3. Khởi chạy wizard:
    ```bash
    npm run init
    ```
 
 ---
 
-## 📂 Cấu Trúc Dự Án Sau Khi Khởi Tạo (Generated Monorepo Structure)
+## 📂 Cấu Trúc Dự Án Sau Khi Khởi Tạo (Monorepo Structure)
 
 ```text
 my-app/
@@ -110,16 +141,20 @@ my-app/
 │       │   └── App.vue        # Giao diện mẫu kết nối dữ liệu từ Backend
 │       └── vite.config.ts     # Proxy tự động /api -> Backend port
 │
-├── docs/                      # ADRs và Agent Domain Docs
-├── .gemini/                   # Hoặc .claude/
-│   ├── skills/                # Pocock skills, Taste skills, Ponytail
+├── .vscode/                   # Cấu hình IDE được may đo riêng (nếu chọn)
+│   ├── extensions.json        # Gợi ý extensions theo đúng stack đã chọn
+│   └── settings.json          # Format on save, linter settings
+│
+├── .gemini/                   # Hoặc .claude/, .cursor/ (theo AI agent đã chọn)
+│   ├── skills/                # 52 Production-grade Agent Skills
 │   └── mcp.json               # Cấu hình Chrome DevTools, Filesystem, DB
 │
+├── docs/                      # ADRs và Agent Domain Docs
 ├── .env                       # Local dev connection strings (ĐÃ ĐƯỢC IGNORE)
 ├── .env.example               # Template biến môi trường mẫu (Zero-Leakage)
 ├── .gitignore                 # Composite gitignore tự động gộp theo stack
 ├── docker-compose.yml         # Container Database (Postgres/MySQL + GUI)
-├── package.json               # Quản lý Monorepo & script concurrently
+├── package.json               # Quản lý Monorepo & script dev đồng thời
 └── README.md
 ```
 
@@ -136,20 +171,24 @@ docker compose up -d    # Khởi động Database (nếu chọn Postgres/MySQL)
 pnpm dev                # Chạy đồng thời cả Backend và Frontend!
 ```
 
-- **Frontend**: Mở trình duyệt tại `http://localhost:5173`
-- **Backend Swagger API**: Mở tại `http://localhost:5050/swagger`
+- **Frontend**: `http://localhost:5173`
+- **Backend Swagger API**: `http://localhost:5050/swagger`
 
 ---
 
-## 🛡️ Tiêu Chuẩn Bảo Mật & Kỹ Thuật (Zero-Leakage)
+## 🤝 Đóng Góp Phát Triển (Contributing)
 
-Dự án tuân thủ nghiêm ngặt **Quy tắc Vàng về Bí mật & An ninh (Zero-Leakage)**:
-- Tuyệt đối không bao giờ hardcode chuỗi kết nối Database thật, token hoặc API key trong mã nguồn.
-- Mọi file `.env`, `**/.env`, `*.key`, `*.pem` đều được `.gitignore` chặn đứng tự động.
+Dự án này là mã nguồn mở và chúng tôi rất hoan nghênh sự đóng góp từ cộng đồng lập trình viên!
+
+* 💬 **Trao đổi & Đóng góp ý kiến**: Tham gia [GitHub Discussions](https://github.com/ThienHN0910/Template-P/discussions).
+* 🐛 **Báo cáo lỗi**: Mở [Issue Bug Report](https://github.com/ThienHN0910/Template-P/issues/new?template=bug_report.yml).
+* 💡 **Đề xuất tính năng mới**: Mở [Feature Request](https://github.com/ThienHN0910/Template-P/issues/new?template=feature_request.yml).
+* 🛠️ **Hướng dẫn đóng góp chi tiết**: Xem file [CONTRIBUTING.md](CONTRIBUTING.md).
+* 📜 **Quy tắc ứng xử cộng đồng**: Xem file [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 ---
 
 ## 📄 Bản Quyền (License)
 
-Dự án được phát hành theo giấy phép [MIT License](LICENSE).
+Dự án được phát hành theo giấy phép [MIT License](LICENSE) © 2026 ThienHN0910.
 Tự do sử dụng, chỉnh sửa và phân phối cho các dự án thương mại lẫn mã nguồn mở.

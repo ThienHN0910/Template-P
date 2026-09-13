@@ -1,0 +1,30 @@
+name: 💡 Feature Request / New Blueprint
+description: Suggest an idea or propose a new backend/frontend blueprint
+title: "[Feature]: "
+labels: ["needs-triage", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea to make @thienhn/create-template even better? Tell us about it!
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Motivation
+      description: Is your feature request related to a problem or a new technology?
+      placeholder: I'm always frustrated when... / It would be awesome if create-template supported...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution / Architecture
+      description: Describe the solution you'd like or how the blueprint should look.
+      placeholder: Add support for Go (Fiber/Gin) / SvelteKit / GraphQL...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions or features you've considered.
