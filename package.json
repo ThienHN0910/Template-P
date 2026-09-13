@@ -9,7 +9,7 @@
     "dev": "pnpm --filter ./packages/cli dev",
     "create": "node ./packages/cli/bin/create-p-stack.js",
     "init": "node ./scripts/init.js",
-    "publish-cli": "npm --prefix packages/cli publish --access public"
+    "publish-cli": "cd packages/cli && npm publish --access public"
   },
   "keywords": [
     "cli",
