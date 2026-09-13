@@ -7,6 +7,8 @@
 - **Auto-installer**: Module thực hiện lệnh cài đặt phần mềm phụ thuộc qua Package Manager bản địa (`winget` trên Windows, `brew` trên macOS, `apt` trên Linux) kèm theo fallback URL.
 - **Template Blueprint**: Các khung dự án mẫu tĩnh hoặc động (`templates/backend/*`, `templates/frontend/*`, `templates/skills/*`).
 - **Scaffolded Project**: Dự án Fullstack Monorepo hoàn chỉnh do CLI tạo ra cho người dùng (`apps/backend`, `apps/frontend`, `docs/`, `.gemini/`).
+- **Hybrid Scaffolder**: Cơ chế sinh dự án kết hợp: gọi trực tiếp official upstream generator (`create-vue@latest`, `create-next-app@latest`) để lấy bản mới nhất chuẩn cộng đồng, sau đó tiêm (layering) các tính năng tùy biến độc quyền (Theme 60fps, SCSS, i18n, API Client & Proxy).
+- **Dynamic Skills Engine**: Cơ chế gọi trực tiếp công cụ `skills.sh` (`npx skills@latest add <owner/repo>`) để tải bộ 37+ kỹ năng mới nhất từ GitHub về máy dev.
 - **AI Agent Bundle**: Gói kỹ năng AI (Matt Pocock skills, Taste skills, Ponytail) và cấu hình MCP Server (`mcp.json`) được tích hợp sẵn vào dự án mới.
 
 ## Core Invariants

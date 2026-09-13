@@ -10,15 +10,19 @@ export type DatabaseChoice = 'postgres' | 'mysql' | 'sqlite' | 'none';
 export type FrontendType = 'vue3' | 'react' | 'nextjs' | 'nuxt3';
 
 export interface FrontendFeatures {
+  typescript: boolean;
+  router: boolean;
+  stateManagement: 'pinia' | 'zustand' | 'none';
+  linter: 'eslint' | 'none';
+  prettier: boolean;
+  vitest: boolean;
   darkMode: boolean;
   styling: 'scss' | 'tailwind' | 'css';
   i18n: boolean;
 }
 
 export interface AiSkillsChoice {
-  pocock: boolean;
-  taste: boolean;
-  ponytail: boolean;
+  packages: string[];
   mcp: boolean;
 }
 

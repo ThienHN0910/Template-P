@@ -51,18 +51,22 @@ export async function run() {
     version: '8.0',
   };
   let database: DatabaseChoice = (options.database as DatabaseChoice) || (options.db as DatabaseChoice) || 'postgres';
-  let frontend: { type: FrontendType; features: { darkMode: boolean; styling: 'scss' | 'tailwind' | 'css'; i18n: boolean } } = {
+  let frontend: { type: FrontendType; features: FrontendFeatures } = {
     type: (options.frontend as FrontendType) || 'vue3',
     features: {
+      typescript: true,
+      router: true,
+      stateManagement: 'pinia',
+      linter: 'eslint',
+      prettier: true,
+      vitest: true,
       darkMode: true,
       styling: 'scss',
       i18n: true,
     },
   };
-  let ai = {
-    pocock: true,
-    taste: true,
-    ponytail: true,
+  let ai: AiSkillsChoice = {
+    packages: ['mattpocock/skills', 'taste', 'ponytail'],
     mcp: true,
   };
 

@@ -8,6 +8,8 @@ import { generateCompositeGitignore } from './composite-gitignore.js';
 import { generateDockerCompose } from './docker-compose-generator.js';
 import { generateEnvPair } from './env-generator.js';
 import { generateAgentsMarkdown, generateClaudeMarkdown, generateCursorRules } from './ai-tailor.js';
+import { scaffoldHybridFrontend } from './hybrid-frontend.js';
+import { installDynamicSkills } from './dynamic-skills.js';
 
 export function getTemplatesDir(): string {
   const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -31,7 +33,7 @@ export async function scaffoldProject(config: ProjectConfig): Promise<void> {
   const { targetDir } = config;
   const templatesDir = getTemplatesDir();
 
-  // 1. Ensure target directory exists and is clean
+  // 1. Ensure target directory exists
   await fsp.mkdir(targetDir, { recursive: true });
 
   // 2. Map & Copy Backend Template
@@ -67,31 +69,11 @@ export async function scaffoldProject(config: ProjectConfig): Promise<void> {
     await fsp.cp(backendSource, backendDest, { recursive: true });
   }
 
-  // 3. Map & Copy Frontend Template
-  let feTemplateSlug = '';
-  let fePort = '5173';
+  // 3. Hybrid Upstream Frontend Scaffolding (create-vue@latest / create-next-app@latest + Custom Layering)
+  const fePort = config.frontend.type === 'nextjs' ? '3000' : config.frontend.type === 'nuxt3' ? '3001' : '5173';
+  await scaffoldHybridFrontend(config, templatesDir, bePort);
 
-  if (config.frontend.type === 'vue3') {
-    feTemplateSlug = 'vue3-vite';
-    fePort = '5173';
-  } else if (config.frontend.type === 'react') {
-    feTemplateSlug = 'react-vite';
-    fePort = '5173';
-  } else if (config.frontend.type === 'nextjs') {
-    feTemplateSlug = 'nextjs-app';
-    fePort = '3000';
-  } else if (config.frontend.type === 'nuxt3') {
-    feTemplateSlug = 'nuxt3-app';
-    fePort = '3001';
-  }
-
-  const frontendSource = path.join(templatesDir, 'frontend', feTemplateSlug);
-  const frontendDest = path.join(targetDir, 'apps', 'frontend');
-  if (fs.existsSync(frontendSource)) {
-    await fsp.cp(frontendSource, frontendDest, { recursive: true });
-  }
-
-  // 4. Token Replacements in all copied files
+  // 4. Token Replacements in Backend
   const dbName = `${config.projectName.replace(/[^a-zA-Z0-9]/g, '_')}_db`;
   let connectionString = '';
   if (config.database === 'postgres') {
@@ -125,7 +107,6 @@ export async function scaffoldProject(config: ProjectConfig): Promise<void> {
   }
 
   await replaceTokensInDir(backendDest);
-  await replaceTokensInDir(frontendDest);
 
   // 5. Generate Root package.json (Unified monorepo script)
   let devBackendCmd = '';
@@ -184,40 +165,8 @@ export async function scaffoldProject(config: ProjectConfig): Promise<void> {
     await fsp.writeFile(path.join(targetDir, 'docker-compose.yml'), dockerCompose, 'utf-8');
   }
 
-  // 10. Copy AI Agent Skills & MCP Servers
-  const geminiSkillsDir = path.join(targetDir, '.gemini', 'skills');
-  await fsp.mkdir(geminiSkillsDir, { recursive: true });
-
-  if (config.ai.pocock) {
-    const pocockSource = path.join(templatesDir, 'skills', 'pocock');
-    if (fs.existsSync(pocockSource)) {
-      await fsp.cp(pocockSource, geminiSkillsDir, { recursive: true });
-    }
-  }
-
-  if (config.ai.taste) {
-    const tasteSource = path.join(templatesDir, 'skills', 'taste');
-    if (fs.existsSync(tasteSource)) {
-      await fsp.cp(tasteSource, geminiSkillsDir, { recursive: true });
-    }
-  }
-
-  if (config.ai.ponytail) {
-    const ptSource = path.join(templatesDir, 'skills', 'ponytail');
-    if (fs.existsSync(ptSource)) {
-      await fsp.cp(ptSource, geminiSkillsDir, { recursive: true });
-    }
-  }
-
-  if (config.ai.mcp) {
-    const mcpSource = path.join(templatesDir, 'mcp', 'mcp.json');
-    if (fs.existsSync(mcpSource)) {
-      let mcpContent = await fsp.readFile(mcpSource, 'utf-8');
-      mcpContent = mcpContent.replaceAll('__DB_NAME__', dbName);
-      await fsp.writeFile(path.join(targetDir, '.gemini', 'mcp.json'), mcpContent, 'utf-8');
-      await fsp.writeFile(path.join(targetDir, 'mcp.json'), mcpContent, 'utf-8');
-    }
-  }
+  // 10. Install AI Agent Skills via skills.sh (npx skills add) + Offline Fallback
+  await installDynamicSkills(config, templatesDir);
 
   // 11. Generate Tailored AI Context Files (AGENTS.md, CLAUDE.md, .cursorrules)
   await fsp.writeFile(path.join(targetDir, 'AGENTS.md'), generateAgentsMarkdown(config), 'utf-8');
