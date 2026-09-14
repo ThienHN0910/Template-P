@@ -3,7 +3,13 @@
 1. Update `CHANGELOG.md` and the package version.
 2. Run `pnpm install --frozen-lockfile`, `pnpm typecheck`, `pnpm test`, and `pnpm build`.
 3. Verify the npm artifact with `npm pack --dry-run` from `packages/cli`.
-4. Create a GitHub Release from the reviewed commit.
+4. If npm Trusted Publishing is configured, create a GitHub Release from the reviewed commit;
+   the release workflow publishes the package.
+
+For a manual release before Trusted Publishing is configured, run `npm login --auth-type=web`
+and `npm publish --access public` from `packages/cli` on the reviewed `main` commit. Tag
+that commit with the package version. Do not create a GitHub Release for the same version:
+its `published` event would trigger the workflow and attempt to publish that version again.
 
 ## npm trusted publishing
 
