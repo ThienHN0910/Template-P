@@ -125,17 +125,26 @@ describe('offline scaffolding', () => {
     expect(shouldUseUpstreamGenerator(projectConfig)).toBe(false);
   });
 
-  it('does not create AI assets when AI setup is disabled', async () => {
+  it('does not create AI assets or instructions when AI setup is disabled', async () => {
     const targetDir = fs.mkdtempSync(path.join(os.tmpdir(), 'template-p-no-ai-'));
     temporaryDirectories.push(targetDir);
     const projectConfig = config('pnpm');
     projectConfig.targetDir = targetDir;
+    projectConfig.backend = { type: 'node', architecture: 'blank' };
+    projectConfig.database = 'none';
+    projectConfig.offline = true;
     projectConfig.ai = { enabled: false, agents: ['gemini'], packages: ['mattpocock/skills'], mcp: true };
 
     await installDynamicSkills(projectConfig, path.join(process.cwd(), 'templates'));
 
     expect(fs.existsSync(path.join(targetDir, '.gemini'))).toBe(false);
     expect(fs.existsSync(path.join(targetDir, 'mcp.json'))).toBe(false);
+
+    await scaffoldProject(projectConfig);
+
+    expect(fs.existsSync(path.join(targetDir, 'AGENTS.md'))).toBe(false);
+    expect(fs.existsSync(path.join(targetDir, 'CLAUDE.md'))).toBe(false);
+    expect(fs.existsSync(path.join(targetDir, '.cursorrules'))).toBe(false);
   });
 });
 

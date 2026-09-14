@@ -169,15 +169,17 @@ export async function scaffoldProject(config: ProjectConfig): Promise<void> {
   // 11. Install AI Agent Skills via skills.sh (npx skills add) + Offline Fallback
   await installDynamicSkills(config, templatesDir);
 
-  // 12. Generate Tailored AI Context Files (AGENTS.md, CLAUDE.md, .cursorrules)
-  await fsp.writeFile(path.join(targetDir, 'AGENTS.md'), generateAgentsMarkdown(config), 'utf-8');
+  // 12. Generate tailored AI context files only when AI setup is requested.
+  if (config.ai.enabled !== false) {
+    await fsp.writeFile(path.join(targetDir, 'AGENTS.md'), generateAgentsMarkdown(config), 'utf-8');
 
-  const selectedAgents = Array.isArray(config.ai?.agents) ? config.ai.agents : ['gemini', 'claude', 'cursor'];
-  if (selectedAgents.includes('claude') || selectedAgents.includes('all')) {
-    await fsp.writeFile(path.join(targetDir, 'CLAUDE.md'), generateClaudeMarkdown(config), 'utf-8');
-  }
-  if (selectedAgents.includes('cursor') || selectedAgents.includes('all')) {
-    await fsp.writeFile(path.join(targetDir, '.cursorrules'), generateCursorRules(config), 'utf-8');
+    const selectedAgents = Array.isArray(config.ai?.agents) ? config.ai.agents : ['gemini', 'claude', 'cursor'];
+    if (selectedAgents.includes('claude') || selectedAgents.includes('all')) {
+      await fsp.writeFile(path.join(targetDir, 'CLAUDE.md'), generateClaudeMarkdown(config), 'utf-8');
+    }
+    if (selectedAgents.includes('cursor') || selectedAgents.includes('all')) {
+      await fsp.writeFile(path.join(targetDir, '.cursorrules'), generateCursorRules(config), 'utf-8');
+    }
   }
 
   // 12. Create docs directory

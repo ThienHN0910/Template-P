@@ -8,6 +8,7 @@ on:
       - templates/**
       - scripts/verify-scaffold-matrix.mjs
       - .github/workflows/scaffold-matrix.yml
+      - package.json
       - pnpm-lock.yaml
       - pnpm-workspace.yaml
   workflow_dispatch:

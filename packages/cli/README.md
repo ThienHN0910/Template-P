@@ -74,6 +74,8 @@ npx create-p-stack my-app \
 | `--frontend` | `-f` | `vue3`, `react`, `nextjs`, `nuxt3` | Frontend framework |
 | `--db`, `--database` | `-d` | `postgres`, `mysql`, `sqlite`, `none` | Database engine |
 | `--pm`, `--package-manager` | `-p` | `pnpm`, `npm`, `bun` | Package manager |
+| `--offline` | | | Use vendored blueprints; skip upstream generator downloads |
+| `--no-ai` | | | Skip AI skills, MCP configuration, and AI instruction files |
 | `--yes` | `-y` | | Use defaults / skip questionnaire |
 
 ## 📄 License
