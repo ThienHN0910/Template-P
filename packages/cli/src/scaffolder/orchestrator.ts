@@ -16,6 +16,7 @@ import { createNodeBackendCommand, createRootWorkspaceManifest } from './workspa
 export function getTemplatesDir(): string {
   const currentDir = path.dirname(fileURLToPath(import.meta.url));
   const candidatePaths = [
+    path.resolve(currentDir, '../../../../templates'),
     path.resolve(currentDir, '../../templates'),
     path.resolve(currentDir, '../../../templates'),
     path.resolve(currentDir, '../templates'),

@@ -12,5 +12,6 @@
 
 ## Answer
 
-Vitest provides fourteen behavior-focused contract tests. CI now performs frozen
-installation, typechecking, tests, build, and npm package dry-run verification.
+Vitest provides behavior-focused contract tests, including one representative offline
+scaffold. CI now performs frozen installation, typechecking, tests, build, and npm package
+dry-run verification.

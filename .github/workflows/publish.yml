@@ -38,6 +38,11 @@ jobs:
       - name: Build CLI and sync templates
         run: pnpm build
 
+      - name: Verify package bundle
+        run: |
+          cd packages/cli
+          npm pack --dry-run
+
       - name: Publish to NPM
         run: |
           cd packages/cli

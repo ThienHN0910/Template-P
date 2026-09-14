@@ -10,6 +10,9 @@
     "create-p-stack": "./bin/create-template.js"
   },
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "main": "./dist/index.js",
   "files": [
     "dist",

@@ -6,6 +6,7 @@ import { assertSupportedProjectSelection } from '../src/configuration-validation
 import { assertTargetDirectoryIsAvailable, resolveProjectTarget, validateProjectName } from '../src/project-target.js';
 import { generateEnvPair } from '../src/scaffolder/env-generator.js';
 import { createNodeBackendCommand, createRootWorkspaceManifest } from '../src/scaffolder/workspace-manifest.js';
+import { scaffoldProject } from '../src/scaffolder/orchestrator.js';
 import { ProjectConfig } from '../src/types.js';
 
 const temporaryDirectories: string[] = [];
@@ -90,6 +91,24 @@ describe('generated workspace manifest', () => {
 
     expect(envContent).toContain('PORT=4000');
     expect(envExampleContent).toContain('PORT=4000');
+  });
+
+  it('writes the portable workspace contract into a representative Scaffolded Project', async () => {
+    const parent = fs.mkdtempSync(path.join(os.tmpdir(), 'template-p-scaffold-'));
+    temporaryDirectories.push(parent);
+    const targetDir = path.join(parent, 'sample-app');
+    const projectConfig = config('pnpm');
+    projectConfig.targetDir = targetDir;
+    projectConfig.backend = { type: 'node', architecture: 'blank' };
+    projectConfig.database = 'none';
+    projectConfig.ai = { agents: [], packages: [], mcp: false };
+
+    await scaffoldProject(projectConfig);
+
+    const manifest = JSON.parse(fs.readFileSync(path.join(targetDir, 'package.json'), 'utf-8'));
+    expect(manifest.workspaces).toEqual(['apps/*']);
+    expect(manifest.scripts.dev).toContain('cd apps/backend && pnpm run dev');
+    expect(manifest.scripts.dev).toContain('cd apps/frontend && pnpm run dev');
   });
 });
 

@@ -1,25 +1,24 @@
 # Compatibility contract
 
-`@thienhn/create-template` supports the combinations presented by its interactive CLI.
-The contract is intentionally narrower than “every upstream latest release”: a supported
-combination must scaffold into a contained new directory and expose working root scripts
-for its selected package manager.
+The interactive CLI offers the combinations listed below. The current automated contract is
+intentionally narrower than “every upstream latest release”: it verifies safe CLI input and
+the generated root workspace metadata. Full scaffold → install → build verification is
+tracked separately before a combination is promoted as production-supported.
 
 ## Current baseline
 
 | Concern | Supported baseline |
 | --- | --- |
-| Node.js running the CLI | 18 or newer |
+| Node.js running the CLI | 20.19 or newer |
 | CLI package manager | pnpm 11.15.1 in repository CI |
 | Generated JavaScript workspace managers | pnpm, npm, Bun |
-| Backend families | .NET, Node.js, FastAPI |
-| Frontend families | Vue, React, Next.js, Nuxt |
+| Offered backend families | .NET, Node.js, FastAPI |
+| Offered frontend families | Vue, React, Next.js, Nuxt |
 
 The CI contract tests validate CLI input rules and generated workspace metadata without
 network access. Upstream generators and dynamic skill installation are integration points
-whose output can change; use them only with network access you trust. A wider scaffold →
-install → build matrix is tracked in GitHub issue #2 before any new blueprint is advertised
-as supported.
+whose output can change; use them only with network access you trust. The wider scaffold →
+install → build matrix is tracked in GitHub issue #3.
 
 ## Stability channels
 
