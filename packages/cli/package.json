@@ -51,7 +51,7 @@
     "url": "https://github.com/ThienHN0910/Template-P/issues"
   },
   "dependencies": {
-    "@clack/prompts": "^0.9.1",
+    "@clack/prompts": "^1.8.0",
     "commander": "^15.0.0",
     "execa": "^9.5.2",
     "fs-extra": "^11.3.0",
