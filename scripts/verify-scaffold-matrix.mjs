@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -126,6 +126,11 @@ async function verifyMatrixEntry() {
     const harnessDirectory = path.join(temporaryDirectory, 'harness');
 
     await mkdir(harnessDirectory, { recursive: true });
+    await writeFile(
+      path.join(harnessDirectory, 'package.json'),
+      JSON.stringify({ name: 'template-p-matrix-harness', private: true }, null, 2),
+      'utf-8'
+    );
     await run('npm', ['install', '--no-save', packedArtifact], { cwd: harnessDirectory });
 
     const cliPath = path.join(
