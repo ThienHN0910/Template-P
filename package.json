@@ -28,7 +28,7 @@
   "author": "Antigravity Pair Programmer",
   "license": "MIT",
   "engines": {
-    "node": ">=20.19.0"
+    "node": ">=22.13.0"
   },
   "devDependencies": {
     "typescript": "^5.7.3"

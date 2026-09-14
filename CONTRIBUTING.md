@@ -14,7 +14,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ### Prerequisites
 
-- **Node.js**: >= 20.19.0
+- **Node.js**: >= 22.13.0
 - **Package Manager**: `pnpm` 11.15.1
 - **Git**: Configured on your machine
 
