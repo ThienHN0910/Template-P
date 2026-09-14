@@ -8,7 +8,7 @@ export async function promptProjectName(defaultName: string = 'my-p-app'): Promi
     placeholder: defaultName,
     defaultValue: defaultName,
     validate: (value) => {
-      return validateProjectName(value.trim());
+      return validateProjectName((value ?? '').trim());
     },
   });
 
