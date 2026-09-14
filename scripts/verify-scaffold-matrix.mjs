@@ -133,16 +133,16 @@ async function verifyMatrixEntry() {
     );
     await run('npm', ['install', '--no-save', packedArtifact], { cwd: harnessDirectory });
 
-    const cliPath = path.join(
-      harnessDirectory,
-      'node_modules',
-      '.bin',
-      process.platform === 'win32' ? 'create-template.cmd' : 'create-template'
-    );
     const projectName = `matrix-${backend}-${packageManager}`;
     await run(
-      cliPath,
+      'npm',
       [
+        'exec',
+        '--yes',
+        '--package',
+        packedArtifact,
+        '--',
+        'create-template',
         projectName,
         '--backend',
         backend,
