@@ -11,10 +11,12 @@ import { generateAgentsMarkdown, generateClaudeMarkdown, generateCursorRules } f
 import { scaffoldHybridFrontend } from './hybrid-frontend.js';
 import { installDynamicSkills } from './dynamic-skills.js';
 import { generateIdeConfigs } from './ide-generator.js';
+import { createNodeBackendCommand, createRootWorkspaceManifest } from './workspace-manifest.js';
 
 export function getTemplatesDir(): string {
   const currentDir = path.dirname(fileURLToPath(import.meta.url));
   const candidatePaths = [
+    path.resolve(currentDir, '../../../../templates'),
     path.resolve(currentDir, '../../templates'),
     path.resolve(currentDir, '../../../templates'),
     path.resolve(currentDir, '../templates'),
@@ -111,13 +113,17 @@ export async function scaffoldProject(config: ProjectConfig): Promise<void> {
 
   // 5. Generate Root package.json (Unified monorepo script)
   let devBackendCmd = '';
+  let buildBackendCmd = '';
   if (config.backend.type === 'dotnet') {
     if (beTemplateSlug === 'dotnet-8-webapi-ddd') {
-      devBackendCmd = 'dotnet run --project apps/backend/src/API/API.csproj';
+      devBackendCmd = `dotnet run --project apps/backend/src/API/API.csproj --urls http://localhost:${bePort}`;
+      buildBackendCmd = 'dotnet build apps/backend/src/API/API.csproj';
     } else if (beTemplateSlug === 'dotnet-8-webapi-mvc') {
-      devBackendCmd = 'dotnet run --project apps/backend/WebApiMvc.csproj';
+      devBackendCmd = `dotnet run --project apps/backend/WebApiMvc.csproj --urls http://localhost:${bePort}`;
+      buildBackendCmd = 'dotnet build apps/backend/WebApiMvc.csproj';
     } else {
-      devBackendCmd = 'dotnet run --project apps/backend/BlankApi.csproj';
+      devBackendCmd = `dotnet run --project apps/backend/BlankApi.csproj --urls http://localhost:${bePort}`;
+      buildBackendCmd = 'dotnet build apps/backend/BlankApi.csproj';
     }
   } else if (config.backend.type === 'fastapi') {
     devBackendCmd =
@@ -125,30 +131,21 @@ export async function scaffoldProject(config: ProjectConfig): Promise<void> {
         ? 'cd apps/backend && uvicorn app.main:app --reload --port 8000'
         : 'cd apps/backend && uvicorn main:app --reload --port 8000';
   } else {
-    devBackendCmd = `${config.packageManager} --filter backend dev`;
+    devBackendCmd = createNodeBackendCommand(config.packageManager, 'dev');
+    buildBackendCmd = createNodeBackendCommand(config.packageManager, 'build');
   }
 
-  const devFrontendCmd = `${config.packageManager} --filter frontend dev`;
-
-  const rootPackageJson = {
-    name: config.projectName,
-    version: '1.0.0',
-    private: true,
-    type: 'module',
-    scripts: {
-      dev: `concurrently -n "BE,FE" -c "cyan,magenta" "${devBackendCmd}" "${devFrontendCmd}"`,
-      build: `${config.packageManager} --filter frontend build`,
-    },
-    devDependencies: {
-      concurrently: '^9.1.2',
-    },
-  };
+  const rootPackageJson = createRootWorkspaceManifest(config, devBackendCmd, buildBackendCmd || undefined);
 
   await fsp.writeFile(path.join(targetDir, 'package.json'), JSON.stringify(rootPackageJson, null, 2), 'utf-8');
 
   // 6. Generate Workspace file
   if (config.packageManager === 'pnpm') {
-    await fsp.writeFile(path.join(targetDir, 'pnpm-workspace.yaml'), "packages:\n  - 'apps/*'\n", 'utf-8');
+    await fsp.writeFile(
+      path.join(targetDir, 'pnpm-workspace.yaml'),
+      "packages:\n  - 'apps/*'\nallowBuilds:\n  esbuild: true\n",
+      'utf-8'
+    );
   }
 
   // 7. Generate Composite .gitignore
@@ -172,15 +169,17 @@ export async function scaffoldProject(config: ProjectConfig): Promise<void> {
   // 11. Install AI Agent Skills via skills.sh (npx skills add) + Offline Fallback
   await installDynamicSkills(config, templatesDir);
 
-  // 12. Generate Tailored AI Context Files (AGENTS.md, CLAUDE.md, .cursorrules)
-  await fsp.writeFile(path.join(targetDir, 'AGENTS.md'), generateAgentsMarkdown(config), 'utf-8');
+  // 12. Generate tailored AI context files only when AI setup is requested.
+  if (config.ai.enabled !== false) {
+    await fsp.writeFile(path.join(targetDir, 'AGENTS.md'), generateAgentsMarkdown(config), 'utf-8');
 
-  const selectedAgents = Array.isArray(config.ai?.agents) ? config.ai.agents : ['gemini', 'claude', 'cursor'];
-  if (selectedAgents.includes('claude') || selectedAgents.includes('all')) {
-    await fsp.writeFile(path.join(targetDir, 'CLAUDE.md'), generateClaudeMarkdown(config), 'utf-8');
-  }
-  if (selectedAgents.includes('cursor') || selectedAgents.includes('all')) {
-    await fsp.writeFile(path.join(targetDir, '.cursorrules'), generateCursorRules(config), 'utf-8');
+    const selectedAgents = Array.isArray(config.ai?.agents) ? config.ai.agents : ['gemini', 'claude', 'cursor'];
+    if (selectedAgents.includes('claude') || selectedAgents.includes('all')) {
+      await fsp.writeFile(path.join(targetDir, 'CLAUDE.md'), generateClaudeMarkdown(config), 'utf-8');
+    }
+    if (selectedAgents.includes('cursor') || selectedAgents.includes('all')) {
+      await fsp.writeFile(path.join(targetDir, '.cursorrules'), generateCursorRules(config), 'utf-8');
+    }
   }
 
   // 12. Create docs directory

@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "pnpm --filter ./packages/cli build",
+    "typecheck": "pnpm --filter ./packages/cli typecheck",
+    "test": "pnpm --filter ./packages/cli test",
     "dev": "pnpm --filter ./packages/cli dev",
     "create": "node ./packages/cli/bin/create-p-stack.js",
     "init": "node ./scripts/init.js",
@@ -26,7 +28,7 @@
   "author": "Antigravity Pair Programmer",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.13.0"
   },
   "devDependencies": {
     "typescript": "^5.7.3"

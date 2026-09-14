@@ -1,0 +1,71 @@
+name: Scaffold Matrix
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - packages/cli/**
+      - templates/**
+      - scripts/verify-scaffold-matrix.mjs
+      - .github/workflows/scaffold-matrix.yml
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scaffold-install-build-smoke:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - backend: node
+            architecture: blank
+            package_manager: npm
+          - backend: dotnet
+            architecture: blank
+            package_manager: pnpm
+          - backend: fastapi
+            architecture: blank
+            package_manager: npm
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Setup .NET
+        if: matrix.backend == 'dotnet'
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Setup Python
+        if: matrix.backend == 'fastapi'
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+
+      - name: Install CLI dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packed CLI artifact
+        run: pnpm build
+
+      - name: Verify scaffold, install, build, and health
+        env:
+          MATRIX_BACKEND: ${{ matrix.backend }}
+          MATRIX_ARCHITECTURE: ${{ matrix.architecture }}
+          MATRIX_PACKAGE_MANAGER: ${{ matrix.package_manager }}
+        run: node scripts/verify-scaffold-matrix.mjs

@@ -1,5 +1,6 @@
 import * as p from '@clack/prompts';
 import pc from 'picocolors';
+import { validateProjectName } from '../project-target.js';
 
 export async function promptProjectName(defaultName: string = 'my-p-app'): Promise<string> {
   const name = await p.text({
@@ -7,11 +8,7 @@ export async function promptProjectName(defaultName: string = 'my-p-app'): Promi
     placeholder: defaultName,
     defaultValue: defaultName,
     validate: (value) => {
-      if (!value) return;
-      const trimmed = value.trim();
-      if (!/^[a-zA-Z0-9_-]+$/.test(trimmed)) {
-        return 'Project name can only contain letters, numbers, hyphens (-) and underscores (_)';
-      }
+      return validateProjectName(value.trim());
     },
   });
 

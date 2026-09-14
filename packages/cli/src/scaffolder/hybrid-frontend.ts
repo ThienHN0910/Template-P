@@ -4,6 +4,10 @@ import path from 'node:path';
 import { execa } from 'execa';
 import { ProjectConfig } from '../types.js';
 
+export function shouldUseUpstreamGenerator(config: ProjectConfig): boolean {
+  return !config.offline;
+}
+
 export async function scaffoldHybridFrontend(
   config: ProjectConfig,
   templatesDir: string,
@@ -31,15 +35,17 @@ export async function scaffoldHybridFrontend(
       flags.push('--default');
     }
 
-    try {
-      await execa('npx', ['create-vue@latest', ...flags], {
-        cwd: appsDir,
-        timeout: 25000,
-        stdio: 'pipe',
-      });
-      usedUpstream = true;
-    } catch {
-      usedUpstream = false;
+    if (shouldUseUpstreamGenerator(config)) {
+      try {
+        await execa('npx', ['create-vue@latest', ...flags], {
+          cwd: appsDir,
+          timeout: 25000,
+          stdio: 'pipe',
+        });
+        usedUpstream = true;
+      } catch {
+        usedUpstream = false;
+      }
     }
 
     if (!usedUpstream) {
@@ -53,39 +59,41 @@ export async function scaffoldHybridFrontend(
     // 2. Layer Custom Additions (Theme, i18n, SCSS, API Client & Proxy, Showcase App.vue)
     await layerVueCustomizations(frontendDest, templatesDir, config, bePort);
   } else if (frontend.type === 'nextjs') {
-    try {
-      const pmFlag =
-        config.packageManager === 'pnpm'
-          ? '--use-pnpm'
-          : config.packageManager === 'bun'
-            ? '--use-bun'
-            : '--use-npm';
-      await execa(
-        'npx',
-        [
-          'create-next-app@latest',
-          'frontend',
-          '--typescript',
-          '--eslint',
-          '--tailwind',
-          '--app',
-          '--src-dir',
-          '--import-alias',
-          '@/*',
-          '--skip-install',
-          '--disable-git',
-          '--yes',
-          pmFlag,
-        ],
-        {
-          cwd: appsDir,
-          timeout: 30000,
-          stdio: 'pipe',
-        }
-      );
-      usedUpstream = true;
-    } catch {
-      usedUpstream = false;
+    if (shouldUseUpstreamGenerator(config)) {
+      try {
+        const pmFlag =
+          config.packageManager === 'pnpm'
+            ? '--use-pnpm'
+            : config.packageManager === 'bun'
+              ? '--use-bun'
+              : '--use-npm';
+        await execa(
+          'npx',
+          [
+            'create-next-app@latest',
+            'frontend',
+            '--typescript',
+            '--eslint',
+            '--tailwind',
+            '--app',
+            '--src-dir',
+            '--import-alias',
+            '@/*',
+            '--skip-install',
+            '--disable-git',
+            '--yes',
+            pmFlag,
+          ],
+          {
+            cwd: appsDir,
+            timeout: 30000,
+            stdio: 'pipe',
+          }
+        );
+        usedUpstream = true;
+      } catch {
+        usedUpstream = false;
+      }
     }
 
     if (!usedUpstream) {

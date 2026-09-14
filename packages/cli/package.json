@@ -10,6 +10,9 @@
     "create-p-stack": "./bin/create-template.js"
   },
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "main": "./dist/index.js",
   "files": [
     "dist",
@@ -20,6 +23,8 @@
   "scripts": {
     "build": "tsup && node ./scripts/copy-templates.js",
     "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -56,6 +61,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^22.13.1",
     "tsup": "^8.3.6",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^4.1.11"
   }
 }

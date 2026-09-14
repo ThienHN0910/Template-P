@@ -6,6 +6,9 @@ import { ProjectConfig } from '../types.js';
 
 export async function installDynamicSkills(config: ProjectConfig, templatesDir: string): Promise<void> {
   const { targetDir, ai } = config;
+  if (ai?.enabled === false) {
+    return;
+  }
   const agents = Array.isArray(ai?.agents) && ai.agents.length > 0 ? ai.agents : ['gemini', 'claude', 'cursor'];
   const isAll = agents.includes('all');
 
@@ -28,15 +31,17 @@ export async function installDynamicSkills(config: ProjectConfig, templatesDir: 
     if (pkg.includes('/')) {
       // GitHub repo package (e.g. mattpocock/skills)
       let onlineSuccess = false;
-      try {
-        await execa('npx', ['skills@latest', 'add', pkg, '--agent', agentParam, '--all', '--copy', '-y'], {
-          cwd: targetDir,
-          timeout: 25000,
-          stdio: 'pipe',
-        });
-        onlineSuccess = true;
-      } catch {
-        onlineSuccess = false;
+      if (!config.offline) {
+        try {
+          await execa('npx', ['skills@latest', 'add', pkg, '--agent', agentParam, '--all', '--copy', '-y'], {
+            cwd: targetDir,
+            timeout: 25000,
+            stdio: 'pipe',
+          });
+          onlineSuccess = true;
+        } catch {
+          onlineSuccess = false;
+        }
       }
 
       // Offline Fallback / Ensure all Pocock skills are present in selected agent dirs

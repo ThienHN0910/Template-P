@@ -24,6 +24,7 @@ export interface FrontendFeatures {
 export type IdeChoice = 'vscode' | 'rider' | 'visualstudio' | 'none';
 
 export interface AiSkillsChoice {
+  enabled?: boolean;
   agents: string[];
   packages: string[];
   mcp: boolean;
@@ -44,6 +45,7 @@ export interface ProjectConfig {
   };
   ide: IdeChoice[];
   ai: AiSkillsChoice;
+  offline: boolean;
   targetDir: string;
 }
 
