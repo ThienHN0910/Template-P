@@ -18,5 +18,14 @@ the next release, configure npm Trusted Publishing for `@thienhn/create-template
 the `Publish Package` workflow in `ThienHN0910/Template-P`. This removes the need for a
 long-lived `NPM_TOKEN` and makes package provenance verifiable.
 
+The npm configuration can be created with npm 11 (npm may request browser-based 2FA):
+
+```bash
+npx npm@11.19.1 trust github @thienhn/create-template --repo ThienHN0910/Template-P --file publish.yml --allow-publish
+```
+
+The matching workflow uses Node.js 24, npm 11.19.1, and `id-token: write`. Confirm the
+publisher with `npx npm@11.19.1 trust list @thienhn/create-template` before creating a release.
+
 Until that npm-side configuration is complete, do not trigger the publish workflow. The
 required npm configuration is an external maintainer action, not a repository secret.
