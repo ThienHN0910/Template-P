@@ -5,6 +5,16 @@ semantic versioning for the published CLI.
 
 ## Unreleased
 
+## 2.0.1 - 2026-09-15
+
+### Fixed
+
+- Pinned the patched esbuild 0.28.2 across the development toolchain to address GHSA-g7r4-m6w7-qqqr.
+
+### Changed
+
+- Updated the release workflow to Node.js 24 and npm 11 for OIDC trusted publishing.
+
 ## 2.0.0 - 2026-09-14
 
 ### Changed

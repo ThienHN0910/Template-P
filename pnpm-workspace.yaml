@@ -2,3 +2,6 @@ packages:
   - 'packages/*'
 allowBuilds:
   esbuild: true
+# tsup 8.x requests esbuild ^0.27, which is affected by GHSA-g7r4-m6w7-qqqr.
+overrides:
+  esbuild: 0.28.2
