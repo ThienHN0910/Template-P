@@ -100,6 +100,7 @@ describe('generated workspace manifest', () => {
     const projectConfig = config('pnpm');
     projectConfig.targetDir = targetDir;
     projectConfig.backend = { type: 'node', architecture: 'blank' };
+    projectConfig.frontend = { ...projectConfig.frontend, type: 'react' };
     projectConfig.database = 'none';
     projectConfig.ai = { agents: [], packages: [], mcp: false };
 
