@@ -5,8 +5,10 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { assertSupportedProjectSelection } from '../src/configuration-validation.js';
 import { assertTargetDirectoryIsAvailable, resolveProjectTarget, validateProjectName } from '../src/project-target.js';
 import { generateEnvPair } from '../src/scaffolder/env-generator.js';
+import { installDynamicSkills } from '../src/scaffolder/dynamic-skills.js';
 import { createNodeBackendCommand, createRootWorkspaceManifest } from '../src/scaffolder/workspace-manifest.js';
 import { scaffoldProject } from '../src/scaffolder/orchestrator.js';
+import { shouldUseUpstreamGenerator } from '../src/scaffolder/hybrid-frontend.js';
 import { ProjectConfig } from '../src/types.js';
 
 const temporaryDirectories: string[] = [];
@@ -39,6 +41,7 @@ function config(packageManager: ProjectConfig['packageManager']): ProjectConfig 
     },
     ide: ['vscode'],
     ai: { agents: [], packages: [], mcp: false },
+    offline: false,
     targetDir: '',
   };
 }
@@ -100,7 +103,7 @@ describe('generated workspace manifest', () => {
     const projectConfig = config('pnpm');
     projectConfig.targetDir = targetDir;
     projectConfig.backend = { type: 'node', architecture: 'blank' };
-    projectConfig.frontend = { ...projectConfig.frontend, type: 'react' };
+    projectConfig.offline = true;
     projectConfig.database = 'none';
     projectConfig.ai = { agents: [], packages: [], mcp: false };
 
@@ -110,6 +113,29 @@ describe('generated workspace manifest', () => {
     expect(manifest.workspaces).toEqual(['apps/*']);
     expect(manifest.scripts.dev).toContain('cd apps/backend && pnpm run dev');
     expect(manifest.scripts.dev).toContain('cd apps/frontend && pnpm run dev');
+    expect(fs.readFileSync(path.join(targetDir, 'pnpm-workspace.yaml'), 'utf-8')).toContain('esbuild: true');
+  });
+});
+
+describe('offline scaffolding', () => {
+  it('uses vendored frontend blueprints instead of upstream generators', () => {
+    const projectConfig = config('pnpm');
+    projectConfig.offline = true;
+
+    expect(shouldUseUpstreamGenerator(projectConfig)).toBe(false);
+  });
+
+  it('does not create AI assets when AI setup is disabled', async () => {
+    const targetDir = fs.mkdtempSync(path.join(os.tmpdir(), 'template-p-no-ai-'));
+    temporaryDirectories.push(targetDir);
+    const projectConfig = config('pnpm');
+    projectConfig.targetDir = targetDir;
+    projectConfig.ai = { enabled: false, agents: ['gemini'], packages: ['mattpocock/skills'], mcp: true };
+
+    await installDynamicSkills(projectConfig, path.join(process.cwd(), 'templates'));
+
+    expect(fs.existsSync(path.join(targetDir, '.gemini'))).toBe(false);
+    expect(fs.existsSync(path.join(targetDir, 'mcp.json'))).toBe(false);
   });
 });
 

@@ -44,6 +44,8 @@ export async function run() {
     .option('--db <type>', 'Database alias (postgres, mysql, sqlite, none)')
     .option('-p, --package-manager <pm>', 'Package manager (pnpm, npm, bun)')
     .option('--pm <pm>', 'Package manager shorthand')
+    .option('--offline', 'Use vendored blueprints and skip remote generator downloads', false)
+    .option('--no-ai', 'Skip AI skill and MCP setup')
     .option('-y, --yes', 'Use defaults and skip interactive questionnaire', false)
     .parse(process.argv);
 
@@ -77,6 +79,7 @@ export async function run() {
   };
   let ide: IdeChoice[] = ['vscode'];
   let ai: AiSkillsChoice = {
+    enabled: options.ai !== false,
     agents: ['gemini', 'claude', 'cursor'],
     packages: ['mattpocock/skills', 'taste', 'ponytail'],
     mcp: true,
@@ -122,6 +125,10 @@ export async function run() {
     p.log.info(pc.dim('Non-interactive mode: Using configured flags or sensible defaults.'));
   }
 
+  if (options.ai === false) {
+    ai = { enabled: false, agents: [], packages: [], mcp: false };
+  }
+
   const nameValidationError = validateProjectName(projectName);
   if (nameValidationError) {
     throw new Error(nameValidationError);
@@ -146,6 +153,7 @@ export async function run() {
     frontend,
     ide,
     ai,
+    offline: options.offline,
     targetDir,
   };
 
@@ -167,16 +175,20 @@ export async function run() {
     config.database === 'postgres' || config.database === 'mysql'
       ? `\n  2. ${pc.yellow('docker compose up -d')}     (Start local database)`
       : '';
+  const aiSummary =
+    config.ai.enabled === false
+      ? 'AI skill and MCP setup skipped (--no-ai).'
+      : `AI Agent super-powers loaded:\n` +
+        `  • Agent instructions in ${pc.bold('AGENTS.md')}, ${pc.bold('CLAUDE.md')}, ${pc.bold('.cursorrules')}\n` +
+        `  • Agent skills in ${pc.bold('.gemini/skills/')}\n` +
+        `  • MCP servers in ${pc.bold('mcp.json')}`;
 
   p.note(
     `Next steps to get started:\n\n` +
       `  1. ${pc.cyan(`cd ${config.projectName}`)}\n` +
       `  2. ${pc.cyan(`${config.packageManager} install`)}${dbInstruction}\n` +
       `  3. ${pc.cyan(`${config.packageManager} dev`)}         (Runs Backend & Frontend simultaneously!)\n\n` +
-      `AI Agent super-powers loaded:\n` +
-      `  • Agent instructions in ${pc.bold('AGENTS.md')}, ${pc.bold('CLAUDE.md')}, ${pc.bold('.cursorrules')}\n` +
-      `  • Agent skills in ${pc.bold('.gemini/skills/')}\n` +
-      `  • MCP servers in ${pc.bold('mcp.json')}`,
+      aiSummary,
     pc.bold(pc.green('Project Ready! 🚀'))
   );
 

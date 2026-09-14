@@ -19,7 +19,8 @@ tracked separately before a combination is promoted as production-supported.
 The CI contract tests validate CLI input rules and generated workspace metadata without
 network access. Upstream generators and dynamic skill installation are integration points
 whose output can change; use them only with network access you trust. The wider scaffold →
-install → build matrix is tracked in GitHub issue #3.
+install → build matrix is tracked in GitHub issue #3. It verifies Node/npm, .NET/pnpm, and
+FastAPI/npm blank-backend combinations from a packed npm artifact with `--offline --no-ai`.
 
 ## Stability channels
 

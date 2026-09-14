@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Product {
   id: string;
@@ -98,6 +98,22 @@ export function App() {
             placeholder="Item name..."
             style={{
               flex: 1,
+              padding: '0.6rem 1rem',
+              borderRadius: 8,
+              border: '1px solid var(--border-color)',
+              background: 'var(--bg-primary)',
+              color: 'var(--text-primary)',
+            }}
+          />
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={price}
+            onChange={(event) => setPrice(Number(event.target.value))}
+            aria-label="Item price"
+            style={{
+              width: '7rem',
               padding: '0.6rem 1rem',
               borderRadius: 8,
               border: '1px solid var(--border-color)',

@@ -101,6 +101,8 @@ npx @thienhn/create-template my-app \
 | `--frontend` | `-f` | `vue3`, `react`, `nextjs`, `nuxt3` | Framework frontend |
 | `--db`, `--database` | `-d` | `postgres`, `mysql`, `sqlite`, `none` | Động cơ Database |
 | `--pm`, `--package-manager` | `-p` | `pnpm`, `npm`, `bun` | Trình quản lý gói |
+| `--offline` | | | Chỉ dùng blueprint vendored, không gọi upstream generator |
+| `--no-ai` | | | Không cài Agent Skills hoặc MCP configuration |
 | `--yes` | `-y` | | Bỏ qua hỏi đáp, dùng cấu hình mặc định |
 
 ---

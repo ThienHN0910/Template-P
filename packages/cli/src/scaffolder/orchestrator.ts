@@ -141,7 +141,11 @@ export async function scaffoldProject(config: ProjectConfig): Promise<void> {
 
   // 6. Generate Workspace file
   if (config.packageManager === 'pnpm') {
-    await fsp.writeFile(path.join(targetDir, 'pnpm-workspace.yaml'), "packages:\n  - 'apps/*'\n", 'utf-8');
+    await fsp.writeFile(
+      path.join(targetDir, 'pnpm-workspace.yaml'),
+      "packages:\n  - 'apps/*'\nallowBuilds:\n  esbuild: true\n",
+      'utf-8'
+    );
   }
 
   // 7. Generate Composite .gitignore

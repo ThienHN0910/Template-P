@@ -6,7 +6,7 @@ path.
 
 **Blocked by:** 01: Enforce a safe CLI workspace contract; 02: Verify the CLI workspace contract.
 
-**Status:** ready-for-agent
+**Status:** claimed
 
 - [ ] The matrix documents representative .NET, Node.js, and FastAPI combinations.
 - [ ] Each selected Scaffolded Project installs and builds with its selected package manager.
