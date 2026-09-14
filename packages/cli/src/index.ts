@@ -1,7 +1,5 @@
 import * as p from '@clack/prompts';
 import pc from 'picocolors';
-import path from 'path';
-import fs from 'node:fs';
 import { Command } from 'commander';
 import {
   promptProjectName,
@@ -14,14 +12,18 @@ import {
 } from './prompts/index.js';
 import { inspectEnvironment, handleMissingTools } from './installer/index.js';
 import { scaffoldProject } from './scaffolder/index.js';
+import { assertSupportedProjectSelection } from './configuration-validation.js';
 import {
+  AiSkillsChoice,
   ProjectConfig,
   BackendType,
   FrontendType,
+  FrontendFeatures,
   DatabaseChoice,
   PackageManager,
   IdeChoice,
 } from './types.js';
+import { assertTargetDirectoryIsAvailable, resolveProjectTarget, validateProjectName } from './project-target.js';
 
 export async function run() {
   // Handle graceful Ctrl+C
@@ -86,19 +88,6 @@ export async function run() {
     // 1. Project Name
     projectName = await promptProjectName(rawArgName || 'my-p-app');
 
-    // Check directory collision
-    const checkTarget = path.resolve(process.cwd(), projectName);
-    if (fs.existsSync(checkTarget) && fs.readdirSync(checkTarget).length > 0) {
-      const shouldOverwrite = await p.confirm({
-        message: `Directory ${pc.bold(projectName)} already exists and is not empty. Do you want to proceed and overwrite?`,
-        initialValue: false,
-      });
-      if (p.isCancel(shouldOverwrite) || !shouldOverwrite) {
-        p.cancel(pc.yellow('Scaffolding aborted to protect existing directory.'));
-        process.exit(0);
-      }
-    }
-
     // 2. Package Manager
     packageManager = await promptPackageManager();
 
@@ -133,7 +122,21 @@ export async function run() {
     p.log.info(pc.dim('Non-interactive mode: Using configured flags or sensible defaults.'));
   }
 
-  const targetDir = path.resolve(process.cwd(), projectName);
+  const nameValidationError = validateProjectName(projectName);
+  if (nameValidationError) {
+    throw new Error(nameValidationError);
+  }
+
+  assertSupportedProjectSelection({
+    backend: backend.type,
+    architecture: backend.architecture,
+    frontend: frontend.type,
+    database,
+    packageManager,
+  });
+
+  const targetDir = resolveProjectTarget(process.cwd(), projectName);
+  assertTargetDirectoryIsAvailable(targetDir);
 
   const config: ProjectConfig = {
     projectName,

@@ -32,6 +32,7 @@ NODE_ENV=development
 PROJECT_NAME=${config.projectName}
 
 # Network Ports
+PORT=${bePort}
 BACKEND_PORT=${bePort}
 FRONTEND_PORT=${fePort}
 
@@ -48,6 +49,7 @@ NODE_ENV=development
 PROJECT_NAME=${config.projectName}
 
 # Network Ports
+PORT=${bePort}
 BACKEND_PORT=${bePort}
 FRONTEND_PORT=${fePort}
 

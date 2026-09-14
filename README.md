@@ -18,7 +18,7 @@
   <img src="https://img.shields.io/badge/Docker-Postgres%20%7C%20MySQL-2496ED.svg?style=flat-square&logo=docker" alt="Docker" />
 </p>
 
-> **The Ultimate Universal Scaffolder & GitHub Template**: Khởi tạo dự án Fullstack chuẩn mực sản xuất chỉ trong 30 giây với giao diện Terminal tương tác, tự động kiểm tra runtime môi trường, tích hợp sẵn Database Docker Compose, cấu hình IDE may đo, và đóng gói sẵn 52 AI Agent Skills + MCP Servers.
+> **Universal Fullstack Scaffolder & GitHub Template**: Khởi tạo một nền tảng Fullstack có thể tùy biến bằng giao diện terminal tương tác. Mỗi blueprint cần được xem xét và kiểm thử theo compatibility contract trước khi dùng cho production.
 
 ---
 
@@ -185,6 +185,8 @@ Dự án này là mã nguồn mở và chúng tôi rất hoan nghênh sự đón
 * 💡 **Đề xuất tính năng mới**: Mở [Feature Request](https://github.com/ThienHN0910/Template-P/issues/new?template=feature_request.yml).
 * 🛠️ **Hướng dẫn đóng góp chi tiết**: Xem file [CONTRIBUTING.md](CONTRIBUTING.md).
 * 📜 **Quy tắc ứng xử cộng đồng**: Xem file [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+* 🔒 **Báo cáo lỗ hổng bảo mật**: Xem [SECURITY.md](SECURITY.md).
+* 🧭 **Phạm vi hỗ trợ hiện tại**: Xem [docs/compatibility.md](docs/compatibility.md).
 
 ---
 

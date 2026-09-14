@@ -15,7 +15,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 ### Prerequisites
 
 - **Node.js**: >= 18.0.0
-- **Package Manager**: `pnpm` (v9 or v10)
+- **Package Manager**: `pnpm` 11.15.1
 - **Git**: Configured on your machine
 
 ### 1. Fork & Clone
@@ -36,6 +36,10 @@ pnpm install
 ```bash
 # Build all packages & CLI bundle
 pnpm build
+
+# Check types and the CLI compatibility contract
+pnpm typecheck
+pnpm test
 
 # Watch mode for CLI development
 pnpm dev

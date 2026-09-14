@@ -1,0 +1,5 @@
+# Keep changes to the CLI, shipped blueprints, and release automation reviewable.
+* @ThienHN0910
+/packages/cli/ @ThienHN0910
+/templates/ @ThienHN0910
+/.github/ @ThienHN0910
