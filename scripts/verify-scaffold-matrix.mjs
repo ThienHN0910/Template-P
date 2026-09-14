@@ -128,21 +128,29 @@ async function verifyMatrixEntry() {
     await mkdir(harnessDirectory, { recursive: true });
     await writeFile(
       path.join(harnessDirectory, 'package.json'),
-      JSON.stringify({ name: 'template-p-matrix-harness', private: true }, null, 2),
+      JSON.stringify(
+        {
+          name: 'template-p-matrix-harness',
+          private: true,
+          dependencies: { '@thienhn/create-template': `file:${packedArtifact}` },
+        },
+        null,
+        2
+      ),
       'utf-8'
     );
-    await run('npm', ['install', '--no-save', packedArtifact], { cwd: harnessDirectory });
+    await run('npm', ['install'], { cwd: harnessDirectory });
 
+    const cliPath = path.join(
+      harnessDirectory,
+      'node_modules',
+      '.bin',
+      process.platform === 'win32' ? 'create-template.cmd' : 'create-template'
+    );
     const projectName = `matrix-${backend}-${packageManager}`;
     await run(
-      'npm',
+      cliPath,
       [
-        'exec',
-        '--yes',
-        '--package',
-        packedArtifact,
-        '--',
-        'create-template',
         projectName,
         '--backend',
         backend,
