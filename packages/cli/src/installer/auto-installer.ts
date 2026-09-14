@@ -1,6 +1,6 @@
 import * as p from '@clack/prompts';
 import pc from 'picocolors';
-import { execaCommand } from 'execa';
+import { execa } from 'execa';
 import { ToolCheckResult } from './inspector.js';
 
 export async function handleMissingTools(missingTools: ToolCheckResult[]): Promise<void> {
@@ -37,7 +37,7 @@ export async function handleMissingTools(missingTools: ToolCheckResult[]): Promi
       s.start(`Executing: ${pc.dim(command)}...`);
 
       try {
-        await execaCommand(command, { stdio: 'inherit', timeout: 120000 });
+        await execa(command, { shell: true, stdio: 'inherit', timeout: 120000 });
         s.stop(pc.green(`✓ Successfully installed ${item.tool}!`));
       } catch {
         s.stop(pc.red(`✗ Automatic installation failed or was denied administrator privileges.`));
