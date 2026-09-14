@@ -4,6 +4,8 @@
 
 `@thienhn/create-template` is an interactive CLI scaffolder that bootstraps production-grade fullstack monorepos in seconds.
 
+Requires Node.js 22.13 or newer.
+
 ## 🚀 Quick Start
 
 Run directly via `npx` (no installation required):

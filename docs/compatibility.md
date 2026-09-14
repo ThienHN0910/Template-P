@@ -9,7 +9,7 @@ tracked separately before a combination is promoted as production-supported.
 
 | Concern | Supported baseline |
 | --- | --- |
-| Node.js running the published CLI | 20.19 or newer |
+| Node.js running the published CLI | 22.13 or newer |
 | Node.js running repository checks | 22.13 or newer |
 | CLI package manager | pnpm 11.15.1 in repository CI |
 | Generated JavaScript workspace managers | pnpm, npm, Bun |
