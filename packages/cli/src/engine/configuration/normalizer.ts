@@ -19,6 +19,10 @@ export function normalizeConfiguration(input: unknown): StackConfiguration {
     throw new Error('Blank architecture requires database "none".');
   }
 
+  let framework = frontend.framework || 'none';
+  if (framework === 'nextjs') framework = 'next';
+  if (framework === 'nuxt3') framework = 'nuxt';
+
   return {
     schemaVersion: 1,
     project: {
@@ -35,8 +39,8 @@ export function normalizeConfiguration(input: unknown): StackConfiguration {
       adapter: persistence.adapter,
     },
     frontend: {
-      framework: frontend.framework || 'none',
-      rendering: frontend.rendering || (frontend.framework === 'none' ? 'none' : 'spa'),
+      framework,
+      rendering: frontend.rendering || (framework === 'none' ? 'none' : (framework === 'next' || framework === 'nuxt' ? 'hybrid' : 'spa')),
       styling: frontend.styling || 'none',
       features: Array.isArray(frontend.features) ? frontend.features : [],
     },
@@ -74,8 +78,8 @@ export function normalizeLegacyOptions(legacy: Record<string, any>): StackConfig
   let frontendFramework: 'vue' | 'react' | 'next' | 'nuxt' | 'none' = 'none';
   if (legacy.frontendChoice === 'vue') frontendFramework = 'vue';
   else if (legacy.frontendChoice === 'react') frontendFramework = 'react';
-  else if (legacy.frontendChoice === 'nextjs') frontendFramework = 'next';
-  else if (legacy.frontendChoice === 'nuxt3') frontendFramework = 'nuxt';
+  else if (legacy.frontendChoice === 'nextjs' || legacy.frontendChoice === 'next') frontendFramework = 'next';
+  else if (legacy.frontendChoice === 'nuxt3' || legacy.frontendChoice === 'nuxt') frontendFramework = 'nuxt';
 
   const styling = legacy.vueStyle || legacy.reactStyle || 'tailwind';
   const features = legacy.vueFeatures || legacy.reactFeatures || [];
@@ -96,7 +100,7 @@ export function normalizeLegacyOptions(legacy: Record<string, any>): StackConfig
     },
     frontend: {
       framework: frontendFramework,
-      rendering: frontendFramework === 'none' ? 'none' : 'spa',
+      rendering: frontendFramework === 'none' ? 'none' : (frontendFramework === 'next' || frontendFramework === 'nuxt' ? 'hybrid' : 'spa'),
       styling,
       features,
     },
