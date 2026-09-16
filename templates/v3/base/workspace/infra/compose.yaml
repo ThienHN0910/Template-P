@@ -16,5 +16,50 @@ services:
       timeout: 5s
       retries: 5
 
+# MySQL Reference Configuration
+#  mysql:
+#    image: mysql:8.4
+#    container_name: ${PROJECT_NAME:-app}-mysql
+#    environment:
+#      MYSQL_DATABASE: ${DB_NAME:-appdb}
+#      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - mysqldata:/var/lib/mysql
+#    healthcheck:
+#      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
+
+# SQL Server Reference Configuration
+#  sqlserver:
+#    image: mcr.microsoft.com/mssql/server:2022-latest
+#    container_name: ${PROJECT_NAME:-app}-sqlserver
+#    environment:
+#      - ACCEPT_EULA=Y
+#      - MSSQL_SA_PASSWORD=${DB_PASSWORD}
+#    ports:
+#      - "1433:1433"
+#    volumes:
+#      - mssqldata:/var/opt/mssql
+
+# MongoDB Reference Configuration
+#  mongodb:
+#    image: mongo:7
+#    container_name: ${PROJECT_NAME:-app}-mongodb
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: ${DB_USER:-root}
+#      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+#      MONGO_INITDB_DATABASE: ${DB_NAME:-appdb}
+#    ports:
+#      - "27017:27017"
+#    volumes:
+#      - mongodata:/data/db
+
 volumes:
   pgdata:
+#  mysqldata:
+#  mssqldata:
+#  mongodata:
