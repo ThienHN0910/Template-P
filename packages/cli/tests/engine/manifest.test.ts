@@ -18,6 +18,7 @@ describe('Project Manifest Generator', () => {
     const manifest = generateManifest(resolution);
 
     expect(manifest.schemaVersion).toBe(1);
+    expect(manifest.generatorVersion).toBe('3.0.0');
     expect(manifest.projectName).toBe('manifest-test');
     expect(manifest.capabilities).toContain('runtime/dotnet');
     expect(manifest.supportTier).toBe('verified');

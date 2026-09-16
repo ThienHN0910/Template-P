@@ -1,10 +1,10 @@
 # Template-P
 
-Template-P is the source repository for `@thienhn/create-template`, an interactive CLI that scaffolds full-stack monorepos from bundled blueprints and optional upstream integrations.
+Template-P is the source repository for `@thienhn/create-template`, an interactive CLI and capability engine that scaffolds full-stack monorepos from verified blueprints and modular adapters.
 
 ## Quick start
 
-Template-P v2 requires Node.js 22.13 or later.
+Template-P requires Node.js 22.13 or later (Node.js 24 recommended).
 
 ```bash
 npx @thienhn/create-template my-app
@@ -12,26 +12,28 @@ npx @thienhn/create-template my-app
 
 Run the command without a project name to choose the name interactively. The npm CLI is the primary installation path; this engine repository is not a project to copy through GitHub's **Use this template** button.
 
-## What the current v2 CLI offers
+## What the v3 CLI offers
 
-The v2 CLI offers these selectable families:
+The v3 CLI offers orthogonal full-stack capabilities:
 
-- Backends: .NET 8, Node.js, and FastAPI.
-- Frontends: Vue, React, Next.js, and Nuxt.
-- Databases: PostgreSQL, MySQL, SQLite, or no database.
+- Backends: .NET 10 LTS, Node.js 24 LTS (Fastify/Express), and Python 3.13 FastAPI.
+- Frontends: React 19 + Vite, Vue 3 + Vite, Next.js 15 App Router, Nuxt 3, or API-only mode (`none`).
+- Persistence: PostgreSQL, Microsoft SQL Server, MySQL, SQLite, MongoDB, or none.
+- Architectures: Clean Architecture / DDD, Modular Monolith, or Blank.
 - Package managers: pnpm, npm, and Bun.
 
-It can scaffold from bundled blueprints and, when network access is allowed, use optional upstream frontend generators and dynamic AI-skill integrations. Offered combinations are not automatically production-verified; see the compatibility contract for the evidence boundary.
+### Built-in Presets
 
-## Verified compatibility
+Template-P provides normative presets for rapid scaffolding:
 
-The current full scaffold, install, and build CI matrix verifies only these blank-backend combinations from a packed CLI artifact with `--offline --no-ai`:
+- `dotnet-clean-react`: .NET 10 Clean Architecture with PostgreSQL and React 19
+- `node-fastify-clean-vue`: Node.js Fastify Clean Architecture with PostgreSQL and Vue 3
+- `fastapi-modular-react`: Python FastAPI Modular Architecture with PostgreSQL and React 19
+- `dotnet-clean-api`: .NET 10 Clean Architecture API-only mode
+- `node-express-clean-next`: Node.js Express Clean Architecture with MongoDB and Next.js 15
+- `fastapi-modular-nuxt`: Python FastAPI Modular Architecture with SQLite and Nuxt 3
 
-- Node.js / blank architecture / npm
-- .NET 8 / blank architecture / pnpm
-- FastAPI / blank architecture / npm
-
-Other selectable v2 combinations are offered, but are not described as production-verified until they have equivalent evidence. See the [current v2 compatibility contract](docs/reference/compatibility.md).
+For migration from v2, see the [v2 to v3 migration guide](docs/guides/v2-to-v3-migration.md).
 
 ## Interactive usage
 
@@ -39,7 +41,7 @@ Other selectable v2 combinations are offered, but are not described as productio
 npx @thienhn/create-template
 ```
 
-The interactive flow asks for a project name, package manager, backend and architecture, database, frontend, IDE settings, and optional AI tooling. It performs a preflight check for the selected backend runtime and presents installation guidance when a required runtime is unavailable.
+The interactive flow asks for a project name, package manager, backend runtime, architecture, database, frontend framework, and optional AI tooling.
 
 ## Non-interactive usage
 
@@ -47,13 +49,13 @@ The interactive flow asks for a project name, package manager, backend and archi
 npx @thienhn/create-template my-app \
   --backend dotnet \
   --arch webapi-ddd \
-  --frontend vue3 \
+  --frontend react \
   --database postgres \
   --package-manager pnpm \
   --yes
 ```
 
-See the [command reference](docs/reference/commands.md) and [automation guide](docs/getting-started/automation.md) for every current v2 option and default.
+See the [command reference](docs/reference/commands.md) and [automation guide](docs/getting-started/automation.md) for every option and default.
 
 ## Trust and network boundaries
 
@@ -63,19 +65,19 @@ Use `--offline --no-ai` to use bundled blueprints while avoiding upstream-genera
 npx @thienhn/create-template my-app --offline --no-ai --yes
 ```
 
-Remote `@latest` generators and dynamic skills are integration points whose output may change. Review third-party output, credentials, and deployment settings before production use. Template-P does not add telemetry to generated projects.
+Remote integrations and dynamic skills are optional. Template-P does not add telemetry to generated projects.
 
 ## Documentation
 
-Start with the [documentation index](docs/README.md), then consult the installation, command, compatibility, and automation guides.
+Start with the [documentation index](docs/README.md), then consult the installation, command, compatibility, and migration guides.
 
 ## Contributing and security
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report vulnerabilities according to [SECURITY.md](SECURITY.md), not through public issues. Community support options are in [SUPPORT.md](SUPPORT.md).
 
-## v3 roadmap
+## v3 architecture
 
-The v3 capability architecture is [approved as a design specification](docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md). Its capability registry, lifecycle commands, expanded persistence contract, and support tiers are planned work; they are not shipped v2 behavior.
+The v3 capability architecture is detailed in the [design specification](docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md).
 
 ## License
 

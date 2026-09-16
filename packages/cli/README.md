@@ -1,10 +1,10 @@
 # Template-P
 
-Template-P is the source repository for `@thienhn/create-template`, an interactive CLI that scaffolds full-stack monorepos from bundled blueprints and optional upstream integrations.
+Template-P is the source repository for `@thienhn/create-template`, an interactive CLI and capability engine that scaffolds full-stack monorepos from verified blueprints and modular adapters.
 
 ## Quick start
 
-Node.js 22.13 or later is required.
+Node.js 22.13 or later is required (Node.js 24 recommended).
 
 ```bash
 npx @thienhn/create-template my-app
@@ -12,17 +12,30 @@ npx @thienhn/create-template my-app
 
 Run without a project name to choose it interactively.
 
-## What the current v2 CLI offers
+## What the v3 CLI offers
 
-The v2 CLI offers .NET 8, Node.js, and FastAPI backends; Vue, React, Next.js, and Nuxt frontends; and PostgreSQL, MySQL, SQLite, or no database. It also supports pnpm, npm, and Bun for generated JavaScript workspaces.
+The v3 CLI offers orthogonal full-stack capabilities:
 
-Bundled blueprints are always available. Upstream frontend generators and dynamic AI-skill integrations are optional network integrations.
+- Backends: .NET 10 LTS, Node.js 24 LTS (Fastify/Express), and Python 3.13 FastAPI.
+- Frontends: React 19 + Vite, Vue 3 + Vite, Next.js 15 App Router, Nuxt 3, or API-only mode (`none`).
+- Persistence: PostgreSQL, Microsoft SQL Server, MySQL, SQLite, MongoDB, or none.
+- Architectures: Clean Architecture / DDD, Modular Monolith, or Blank.
+- Package managers: pnpm, npm, and Bun.
+
+### Built-in Presets
+
+- `dotnet-clean-react`: .NET 10 Clean Architecture with PostgreSQL and React 19
+- `node-fastify-clean-vue`: Node.js Fastify Clean Architecture with PostgreSQL and Vue 3
+- `fastapi-modular-react`: Python FastAPI Modular Architecture with PostgreSQL and React 19
+- `dotnet-clean-api`: .NET 10 Clean Architecture API-only mode
+- `node-express-clean-next`: Node.js Express Clean Architecture with MongoDB and Next.js 15
+- `fastapi-modular-nuxt`: Python FastAPI Modular Architecture with SQLite and Nuxt 3
 
 ## Verified compatibility
 
-Full scaffold, install, and build CI evidence is limited to the combinations named in [`scaffold-matrix.yml`](https://github.com/ThienHN0910/Template-P/blob/main/.github/workflows/scaffold-matrix.yml): Node.js blank with npm, .NET blank with pnpm, and FastAPI blank with npm. Other selectable combinations are offered but are not production-verified by that matrix.
+Scaffold, install, and build CI evidence covers the combinations named in [`scaffold-matrix.yml`](https://github.com/ThienHN0910/Template-P/blob/main/.github/workflows/scaffold-matrix.yml) and the representative v3 preset matrix.
 
-Read the [current v2 compatibility contract](https://github.com/ThienHN0910/Template-P/blob/main/docs/reference/compatibility.md) for the complete evidence and stability boundary.
+Read the [compatibility contract](https://github.com/ThienHN0910/Template-P/blob/main/docs/reference/compatibility.md) for the complete evidence and stability boundary.
 
 ## Interactive usage
 
@@ -30,7 +43,7 @@ Read the [current v2 compatibility contract](https://github.com/ThienHN0910/Temp
 npx @thienhn/create-template
 ```
 
-The terminal flow collects the project, package manager, backend, architecture, database, frontend, IDE, and optional AI-tooling choices. It checks the selected backend runtime before scaffolding.
+The terminal flow collects project name, package manager, backend runtime, architecture, database, frontend framework, and optional AI-tooling choices.
 
 ## Non-interactive usage
 
@@ -38,13 +51,13 @@ The terminal flow collects the project, package manager, backend, architecture, 
 npx @thienhn/create-template my-app \
   --backend dotnet \
   --arch webapi-ddd \
-  --frontend vue3 \
+  --frontend react \
   --database postgres \
   --package-manager pnpm \
   --yes
 ```
 
-The [command reference](https://github.com/ThienHN0910/Template-P/blob/main/docs/reference/commands.md) documents the exact current v2 flags.
+The [command reference](https://github.com/ThienHN0910/Template-P/blob/main/docs/reference/commands.md) documents every flag and preset option.
 
 ## Trust and network boundaries
 
@@ -58,11 +71,11 @@ Remote integrations can change independently of this package. Review generated t
 
 ## Documentation
 
-The [repository documentation index](https://github.com/ThienHN0910/Template-P/blob/main/docs/README.md) includes installation, automation, command, and compatibility guides.
+The [repository documentation index](https://github.com/ThienHN0910/Template-P/blob/main/docs/README.md) includes installation, automation, command, and migration guides.
 
-## v3 roadmap
+## v3 architecture
 
-The [approved v3 capability architecture](https://github.com/ThienHN0910/Template-P/blob/main/docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md) describes planned work. It is not shipped v2 behavior.
+The [approved v3 capability architecture](https://github.com/ThienHN0910/Template-P/blob/main/docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md) describes the verified capability engine and roadmap.
 
 ## License
 
