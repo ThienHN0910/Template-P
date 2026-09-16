@@ -1,3 +1,4 @@
+import path from 'node:path';
 import * as p from '@clack/prompts';
 import pc from 'picocolors';
 import { Command } from 'commander';
@@ -58,6 +59,20 @@ export async function run() {
     const { executeDryRun, formatPlanText } = await import('./engine/index.js');
     const plan = executeDryRun({ preset: options.preset, name: rawArgName });
     console.log(formatPlanText(plan));
+    return;
+  }
+
+  if (options.preset && !options.dryRun) {
+    const { scaffoldStack, BUILTIN_PRESETS } = await import('./engine/index.js');
+    const preset = BUILTIN_PRESETS[options.preset];
+    if (!preset) {
+      console.error(pc.red(`Preset "${options.preset}" not found.`));
+      process.exit(1);
+    }
+    const projectName = rawArgName || 'my-p-app';
+    const targetDir = path.resolve(process.cwd(), projectName);
+    await scaffoldStack({ ...preset, project: { ...preset.project, name: projectName } }, targetDir);
+    p.outro(pc.green(`Successfully scaffolded v3 preset "${options.preset}" at ${targetDir}`));
     return;
   }
 

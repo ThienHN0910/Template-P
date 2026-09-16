@@ -1,0 +1,21 @@
+{
+  "name": "template-p-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter ./apps/* --parallel dev",
+    "build": "pnpm --filter ./packages/* --filter ./apps/* build",
+    "test": "pnpm --filter ./packages/* --filter ./apps/* test",
+    "lint": "pnpm --filter ./packages/* --filter ./apps/* lint",
+    "format": "pnpm --filter ./packages/* --filter ./apps/* format",
+    "api:sync": "dotnet run --project apps/backend/src/API/API.csproj -- --export-openapi && pnpm --filter @project/api-client generate",
+    "infra:up": "docker compose -f infra/compose.yaml up -d",
+    "infra:down": "docker compose -f infra/compose.yaml down",
+    "db:migrate": "dotnet run --project apps/backend/src/API/API.csproj -- --migrate",
+    "db:seed": "dotnet run --project apps/backend/src/API/API.csproj -- --seed"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

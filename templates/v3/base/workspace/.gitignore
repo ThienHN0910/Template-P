@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+bin/
+obj/
+.env
+.env.*
+!.env.example
+*.user
+*.suo
