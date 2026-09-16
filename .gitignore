@@ -55,3 +55,4 @@ venv/
 # Local test scratch
 test-output/
 test-scaffold/
+.worktrees/
