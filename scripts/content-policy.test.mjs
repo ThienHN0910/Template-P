@@ -94,3 +94,13 @@ test('GitHub issue and pull-request titles use plain English without emoji', asy
 
   for (const content of contents) assert.doesNotMatch(content, /\p{Extended_Pictographic}/u);
 });
+
+test('repository scripts enforce the first-party content policy before verification', async () => {
+  const root = path.resolve(import.meta.dirname, '..');
+  const packageManifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
+
+  assert.equal(packageManifest.scripts['check:content'], 'node ./scripts/check-first-party-content.mjs');
+  assert.equal(packageManifest.scripts['test:content'], 'node --test ./scripts/content-policy.test.mjs');
+  assert.equal(packageManifest.scripts.test, 'pnpm test:content && pnpm --filter ./packages/cli test');
+  assert.equal(packageManifest.scripts.verify, 'pnpm check:content && pnpm typecheck && pnpm test && pnpm build');
+});
