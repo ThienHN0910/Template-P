@@ -10,7 +10,7 @@ export async function handleMissingTools(missingTools: ToolCheckResult[]): Promi
 
   for (const item of missingTools) {
     p.log.warn(
-      pc.yellow(`⚠️  Runtime required but not found: `) +
+      pc.yellow('Runtime required but not found: ') +
         pc.bold(pc.cyan(item.tool)) +
         pc.dim(` (${item.requiredFor})`)
     );
@@ -38,9 +38,9 @@ export async function handleMissingTools(missingTools: ToolCheckResult[]): Promi
 
       try {
         await execa(command, { shell: true, stdio: 'inherit', timeout: 120000 });
-        s.stop(pc.green(`✓ Successfully installed ${item.tool}!`));
+        s.stop(pc.green(`Successfully installed ${item.tool}.`));
       } catch {
-        s.stop(pc.red(`✗ Automatic installation failed or was denied administrator privileges.`));
+        s.stop(pc.red('Automatic installation failed or was denied administrator privileges.'));
         p.log.info(
           pc.cyan(`Please manually download and install from: `) + pc.underline(pc.bold(item.downloadUrl))
         );

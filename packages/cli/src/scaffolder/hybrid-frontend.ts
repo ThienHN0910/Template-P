@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execa } from 'execa';
 import { ProjectConfig } from '../types.js';
+import { renderVueI18nModule } from './locales/vue.js';
 
 export function shouldUseUpstreamGenerator(config: ProjectConfig): boolean {
   return !config.offline;
@@ -180,37 +181,7 @@ body {
 
   // Inject i18n
   if (config.frontend.features.i18n) {
-    const i18nContent = `import { createI18n } from 'vue-i18n';
-
-export const i18n = createI18n({
-  legacy: false,
-  locale: 'vi',
-  fallbackLocale: 'en',
-  messages: {
-    en: {
-      welcome: 'Fullstack Starter Project',
-      subtitle: 'Powered by create-p-stack & AI Agents',
-      backendStatus: 'Backend Status',
-      items: 'Database Items',
-      addItem: 'Add Item',
-      darkMode: 'Dark Mode',
-      lightMode: 'Light Mode',
-      loading: 'Loading data...',
-    },
-    vi: {
-      welcome: 'Dự Án Fullstack Khởi Tạo',
-      subtitle: 'Xây dựng với create-p-stack & AI Agents',
-      backendStatus: 'Trạng thái Backend',
-      items: 'Dữ liệu từ Database',
-      addItem: 'Thêm mới',
-      darkMode: 'Chế độ Tối',
-      lightMode: 'Chế độ Sáng',
-      loading: 'Đang tải dữ liệu...',
-    },
-  },
-});
-`;
-    await fsp.writeFile(path.join(frontendDest, 'src', 'i18n.ts'), i18nContent, 'utf-8');
+    await fsp.writeFile(path.join(frontendDest, 'src', 'i18n.ts'), renderVueI18nModule(), 'utf-8');
   }
 
   // Inject Typed API Client

@@ -114,6 +114,14 @@ describe('generated workspace manifest', () => {
     expect(manifest.scripts.dev).toContain('cd apps/backend && pnpm run dev');
     expect(manifest.scripts.dev).toContain('cd apps/frontend && pnpm run dev');
     expect(fs.readFileSync(path.join(targetDir, 'pnpm-workspace.yaml'), 'utf-8')).toContain('esbuild: true');
+
+    const i18n = fs.readFileSync(path.join(targetDir, 'apps/frontend/src/i18n.ts'), 'utf8');
+    expect(i18n).toContain("locale: 'en'");
+    expect(i18n).toContain('"welcome": "Full-stack starter project"');
+    expect(i18n).toContain('"welcome": "D\u1ef1 \u00e1n full-stack kh\u1edfi t\u1ea1o"');
+    for (const marker of ['\u00e2\u0153', '\u00f0\u0178', 'D\u00e1\u00bb', '\u00c4\u2018', '\u00c6\u00b0', '\u00c3']) {
+      expect(i18n).not.toContain(marker);
+    }
   });
 });
 

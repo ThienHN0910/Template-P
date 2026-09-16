@@ -41,3 +41,17 @@ test('scans selected roots while excluding vendored directories', async () => {
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test('CLI source is English-only outside explicit locale resources', async () => {
+  const root = path.resolve(import.meta.dirname, '..');
+  const violations = await scanPolicy({
+    root,
+    roots: ['packages/cli/src', 'templates/frontend'],
+    excludePrefixes: [],
+    vietnameseLocaleFiles: [
+      'packages/cli/src/scaffolder/locales/vue.ts',
+      'templates/frontend/vue3-vite/src/i18n.ts',
+    ],
+  });
+  assert.deepEqual(violations, []);
+});
