@@ -1,28 +1,38 @@
-# 1. Kiến Trúc Universal Fullstack Template & CLI Engine
+# 1. Universal Fullstack Template and CLI Engine architecture
 
 Date: 2026-09-13
 
-## Bối cảnh & Vấn đề (Context)
-Các nhà phát triển thường xuyên phải mất nhiều thời gian để khởi tạo dự án mới:
-- Chọn framework Backend (DotNet, Node.js, FastAPI) và dựng các tầng kiến trúc (DDD/Clean Architecture, MVC).
-- Cài đặt runtime và kiểm tra công cụ máy dev.
-- Cấu hình Frontend (Vue 3, React, Next.js, Nuxt 3) với các nhu cầu cơ bản: Theme (Dark/Light), SCSS, Đa ngôn ngữ (i18n).
-- Tích hợp các trợ lý AI Coding Agent (Matt Pocock skills, Taste skills, Ponytail, MCP servers).
+**Status:** Superseded by the approved v3 capability architecture on 2026-09-16.
 
-## Quyết định (Decision)
-1. **Xây dựng `template-p` theo mô hình Monorepo lai (Dual-mode)**:
-   - Một CLI package độc lập (`packages/cli`) có thể publish lên npm (`npx create-p-stack`).
-   - Một kho template (`templates/`) chứa các mẫu BE, FE, AI Skills và MCP configurations.
-   - Hỗ trợ cả GitHub Template Repo ("Use this template" -> chạy wizard nội bộ).
-2. **Interactive CLI UX**:
-   - Sử dụng `@clack/prompts` để hỗ trợ lựa chọn trực quan bằng phím mũi tên, Space (multi-select), Enter (xác nhận) và giá trị mặc định nếu bỏ qua.
-3. **Pre-flight & Installer**:
-   - Tự động chạy lệnh kiểm tra runtime (`dotnet`, `node`, `python`).
-   - Cung cấp cơ chế cài đặt qua Package Manager tương ứng của OS (`winget` trên Windows, `brew` trên macOS, `apt` trên Linux) kèm fallback link.
-4. **AI-Native từ gốc**:
-   - Tự động tạo thư mục `.gemini/skills/` hoặc `.claude/skills/` và cấu hình MCP Server cho dự án đích.
+This ADR records the historical v1/v2 decision. New implementation work follows the v3 design specification.
 
-## Hệ quả (Consequences)
-- Dễ dàng mở rộng thêm template mới trong tương lai chỉ bằng cách thêm thư mục vào `templates/`.
-- Tiết kiệm thời gian thiết lập dự án ban đầu từ hàng giờ xuống dưới 1 phút.
-- Đảm bảo tuân thủ tiêu chuẩn code, bảo mật `.env.example`, và cấu trúc sạch sẽ.
+## Context and problem
+
+Developers regularly spend considerable time starting a new project:
+
+- Choosing a backend framework (.NET, Node.js, or FastAPI) and establishing architecture layers such as DDD/Clean Architecture or MVC.
+- Installing runtimes and checking development-machine tools.
+- Configuring a frontend (Vue 3, React, Next.js, or Nuxt 3) with common needs including dark/light themes, SCSS, and i18n.
+- Integrating AI coding assistants, including Matt Pocock skills, Taste skills, Ponytail, and MCP servers.
+
+## Decision
+
+1. Build `template-p` as a hybrid, dual-mode monorepo:
+   - An independent CLI package in `packages/cli` that can be published to npm and invoked as `npx create-p-stack`.
+   - A template repository in `templates/` containing backend, frontend, AI-skill, and MCP-configuration blueprints.
+   - Support for a GitHub Template Repository flow in which a user selects **Use this template** and runs an internal wizard.
+2. Provide an interactive CLI experience:
+   - Use `@clack/prompts` for arrow-key navigation, space-bar multi-selection, enter-to-confirm behavior, and a default when the user skips a value.
+3. Provide preflight checks and an installer:
+   - Run runtime checks for `dotnet`, `node`, and `python`.
+   - Offer installation through the appropriate operating-system package manager (`winget` on Windows, `brew` on macOS, or `apt` on Linux), with a fallback link.
+4. Be AI-native from the start:
+   - Create `.gemini/skills/` or `.claude/skills/` and MCP-server configuration for the target project.
+
+## Consequences
+
+- New templates can be added by adding directories under `templates/`.
+- Initial project setup is intended to shrink from hours to less than a minute.
+- The generated structure is intended to support coding standards, a sanitized `.env.example`, and a clean layout.
+
+This historical decision is retained for context. See the [approved v3 capability architecture](../superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md) for planned implementation direction.

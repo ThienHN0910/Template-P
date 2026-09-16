@@ -55,3 +55,17 @@ test('CLI source is English-only outside explicit locale resources', async () =>
   });
   assert.deepEqual(violations, []);
 });
+
+test('public documentation is English-only and free of mojibake', async () => {
+  const root = path.resolve(import.meta.dirname, '..');
+  const violations = await scanPolicy({
+    root,
+    roots: [
+      'README.md', 'AGENTS.md', 'CONTEXT.md', 'CHANGELOG.md', 'CODE_OF_CONDUCT.md',
+      'CONTRIBUTING.md', 'SECURITY.md', 'SUPPORT.md', 'docs', 'packages/cli/README.md',
+    ],
+    excludePrefixes: ['docs/superpowers/plans'],
+    vietnameseLocaleFiles: [],
+  });
+  assert.deepEqual(violations, []);
+});

@@ -1,19 +1,23 @@
-# CONTEXT.md: Universal Template & CLI Scaffolder (`create-p-stack`)
+# CONTEXT.md: Template-P CLI Engine
 
-## Domain Glossary
+## Domain glossary
 
-- **CLI Engine**: Bộ điều phối dòng lệnh tương tác (`packages/cli`), xử lý prompt hỏi người dùng, kiểm tra môi trường, và copy/transform template.
-- **Pre-flight Check**: Tiến trình kiểm tra sự tồn tại và phiên bản của các CLI runtime (`dotnet`, `node`, `npm`, `python`) trên máy host trước khi scaffold.
-- **Auto-installer**: Module thực hiện lệnh cài đặt phần mềm phụ thuộc qua Package Manager bản địa (`winget` trên Windows, `brew` trên macOS, `apt` trên Linux) kèm theo fallback URL.
-- **Template Blueprint**: Các khung dự án mẫu tĩnh hoặc động (`templates/backend/*`, `templates/frontend/*`, `templates/skills/*`).
-- **Scaffolded Project**: Dự án Fullstack Monorepo hoàn chỉnh do CLI tạo ra cho người dùng (`apps/backend`, `apps/frontend`, `docs/`, `.gemini/`).
-- **Hybrid Scaffolder**: Cơ chế sinh dự án kết hợp: gọi trực tiếp official upstream generator (`create-vue@latest`, `create-next-app@latest`) để lấy bản mới nhất chuẩn cộng đồng, sau đó tiêm (layering) các tính năng tùy biến độc quyền (Theme 60fps, SCSS, i18n, API Client & Proxy).
-- **Dynamic Skills Engine**: Cơ chế gọi trực tiếp công cụ `skills.sh` (`npx skills@latest add <owner/repo>`) để tải bộ 37+ kỹ năng mới nhất từ GitHub về máy dev.
-- **AI Agent Bundle**: Gói kỹ năng AI (Matt Pocock skills, Taste skills, Ponytail) và cấu hình MCP Server (`mcp.json`) được tích hợp sẵn vào dự án mới.
+- **CLI Engine**: The interactive command-line coordinator in `packages/cli`. It gathers prompts, validates selections, performs environment checks, and copies or transforms templates.
+- **Preflight Check**: The process that checks for the required command-line runtime and version on the host before scaffolding.
+- **Runtime Installer**: The component that offers or invokes operating-system package-manager commands, such as `winget`, `brew`, or `apt`, with a fallback download link when a required runtime is missing.
+- **Template Blueprint**: A static or dynamic project template in `templates/backend/*`, `templates/frontend/*`, or `templates/skills/*`.
+- **Scaffolded Project**: The full-stack monorepo created for a user, typically containing `apps/backend`, `apps/frontend`, documentation, and optional AI-agent configuration.
+- **Hybrid Scaffolder**: The current v2 approach that can invoke an official upstream generator for a frontend, then apply Template-P layers such as themes, styling, i18n, API-client, and proxy configuration. It uses bundled templates when offline or when an upstream invocation cannot be used.
+- **Dynamic Skills Engine**: The current v2 integration that can invoke `skills.sh` through `npx skills@latest add <owner/repo>` to retrieve optional, current skills for a developer machine.
+- **AI Agent Bundle**: Optional AI skills, agent instruction files, and MCP-server configuration included in a scaffolded project.
 
-## Core Invariants
+## Core invariants
 
-1. CLI không bao giờ crash nếu máy người dùng thiếu runtime; luôn bắt lỗi và đưa ra hướng dẫn/tùy chọn cài đặt thân thiện.
-2. Tên dự án phải tuân thủ chuẩn npm package naming (chữ thường, gạch ngang, không ký tự đặc biệt).
-3. Các template Frontend phải có sẵn cơ chế chuyển đổi Theme (Dark/Light) và hỗ trợ đa ngôn ngữ (i18n) cấu hình sẵn.
-4. Mọi template Backend dạng DDD phải tách bạch rõ ràng các tầng: Domain, Application, Infrastructure, Presentation/API.
+1. The CLI handles a missing runtime without an unhandled crash and provides guidance or an installation option.
+2. A project name must comply with npm package-name rules: lowercase, hyphenated where needed, and without unsupported special characters.
+3. Frontend blueprints include the current v2 theme and i18n configuration selected by the CLI.
+4. DDD backend blueprints keep Domain, Application, Infrastructure, and Presentation/API layers separate.
+
+## Scope note
+
+These terms describe current v2 behavior. The v3 capability registry, lifecycle commands, and expanded verification model are planned in the [approved design specification](docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md) and are not shipped behavior.

@@ -1,85 +1,69 @@
-# @thienhn/create-template
+# Template-P
 
-> The Universal Fullstack CLI Scaffolder with Official Upstream Framework Generators & 52 Production AI Agent Skills.
+Template-P is the source repository for `@thienhn/create-template`, an interactive CLI that scaffolds full-stack monorepos from bundled blueprints and optional upstream integrations.
 
-`@thienhn/create-template` is an interactive CLI scaffolder that bootstraps production-grade fullstack monorepos in seconds.
+## Quick start
 
-Requires Node.js 22.13 or newer.
-
-## 🚀 Quick Start
-
-Run directly via `npx` (no installation required):
+Node.js 22.13 or later is required.
 
 ```bash
 npx @thienhn/create-template my-app
 ```
 
-Or run interactively:
+Run without a project name to choose it interactively.
+
+## What the current v2 CLI offers
+
+The v2 CLI offers .NET 8, Node.js, and FastAPI backends; Vue, React, Next.js, and Nuxt frontends; and PostgreSQL, MySQL, SQLite, or no database. It also supports pnpm, npm, and Bun for generated JavaScript workspaces.
+
+Bundled blueprints are always available. Upstream frontend generators and dynamic AI-skill integrations are optional network integrations.
+
+## Verified compatibility
+
+Full scaffold, install, and build CI evidence is limited to the combinations named in [`scaffold-matrix.yml`](../../.github/workflows/scaffold-matrix.yml): Node.js blank with npm, .NET blank with pnpm, and FastAPI blank with npm. Other selectable combinations are offered but are not production-verified by that matrix.
+
+Read the [current v2 compatibility contract](../../docs/reference/compatibility.md) for the complete evidence and stability boundary.
+
+## Interactive usage
 
 ```bash
 npx @thienhn/create-template
 ```
 
-## 🛠️ Supported Frameworks & Stacks
+The terminal flow collects the project, package manager, backend, architecture, database, frontend, IDE, and optional AI-tooling choices. It checks the selected backend runtime before scaffolding.
 
-### 1. Backend Frameworks & Architectures
-- **.NET 8 Web API:**
-  - Clean Architecture / DDD (Domain, Application, Infrastructure, API layers)
-  - MVC (Controllers, Models, Services)
-  - Blank Minimal API
-- **Node.js (TypeScript):**
-  - Express Clean Architecture / DDD
-  - Fastify Modular Architecture
-  - Blank Minimal Server
-- **FastAPI (Python):**
-  - Modular Architecture (Routers, Schemas, Services, SQLModel)
-  - Blank Minimal API
-
-### 2. Database Engines & Containers
-- **PostgreSQL 16 Alpine** + pgAdmin 4 + Healthchecks + Auto-generated `.env` & `docker-compose.yml`
-- **MySQL 8.4** + phpMyAdmin + Healthchecks
-- **SQLite**
-- **None**
-
-### 3. Frontend Frameworks & Official Ecosystem Features
-- **Vue 3 + Vite:** Official `create-vue@latest` delegation + TypeScript, Vue Router, Pinia, ESLint, Prettier, Oxlint, Vitest.
-- **Next.js:** Official `create-next-app@latest` delegation + TypeScript, Tailwind CSS, ESLint, App Router.
-- **React + Vite:** React 19 + TypeScript + Vite.
-- **Nuxt 3:** Nuxt 3 Fullstack.
-- **Custom Built-in Layers:**
-  - 60fps GPU-accelerated Dark/Light mode theme system (`data-theme="dark"` / `data-theme="light"`).
-  - Multi-language i18n support (English & Vietnamese).
-  - Typed API client and reverse proxy (`/api`) to backend.
-
-### 4. AI Agent Super-powers (52 Skills & MCP Servers)
-- **37 Matt Pocock Skills:** `ask-matt`, `to-tickets`, `to-spec`, `grill-me`, `domain-modeling`, `triage`, `tdd`, `code-review`, `wayfinder`, etc.
-- **10 Design Taste Skills:** `design-taste-frontend`, `high-end-visual-design`, `industrial-brutalist-ui`, `minimalist-ui`, `image-to-code`, etc.
-- **5 Ponytail Anti-Over-Engineering Skills:** `ponytail`, `ponytail-review`, `ponytail-audit`, `ponytail-gain`, `ponytail-help`.
-- **MCP Servers Pre-configured:** Chrome DevTools, Filesystem, Database connectors.
-
-## ⚡ CLI Flags (Non-Interactive / CI Mode)
+## Non-interactive usage
 
 ```bash
-npx create-p-stack my-app \
+npx @thienhn/create-template my-app \
   --backend dotnet \
   --arch webapi-ddd \
   --frontend vue3 \
-  --db postgres \
-  --pm pnpm \
+  --database postgres \
+  --package-manager pnpm \
   --yes
 ```
 
-| Flag | Short | Options | Description |
-|---|---|---|---|
-| `--backend` | `-b` | `dotnet`, `node`, `fastapi` | Backend framework |
-| `--arch` | `-a` | `webapi-ddd`, `webapi-mvc`, `express-ddd`, `fastify-clean`, `modular`, `blank` | Architecture pattern |
-| `--frontend` | `-f` | `vue3`, `react`, `nextjs`, `nuxt3` | Frontend framework |
-| `--db`, `--database` | `-d` | `postgres`, `mysql`, `sqlite`, `none` | Database engine |
-| `--pm`, `--package-manager` | `-p` | `pnpm`, `npm`, `bun` | Package manager |
-| `--offline` | | | Use vendored blueprints; skip upstream generator downloads |
-| `--no-ai` | | | Skip AI skills, MCP configuration, and AI instruction files |
-| `--yes` | `-y` | | Use defaults / skip questionnaire |
+The [command reference](../../docs/reference/commands.md) documents the exact current v2 flags.
 
-## 📄 License
+## Trust and network boundaries
 
-MIT © Antigravity Team
+To avoid upstream-generator and dynamic-skill downloads, use bundled blueprints with:
+
+```bash
+npx @thienhn/create-template my-app --offline --no-ai --yes
+```
+
+Remote integrations can change independently of this package. Review generated third-party output and configuration before production use.
+
+## Documentation
+
+The [repository documentation index](../../docs/README.md) includes installation, automation, command, and compatibility guides.
+
+## v3 roadmap
+
+The [approved v3 capability architecture](../../docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md) describes planned work. It is not shipped v2 behavior.
+
+## License
+
+[MIT](../../LICENSE) © 2026 ThienHN0910.
