@@ -4,6 +4,7 @@ export function getWorkspaceBaseOperations(
   projectName: string,
   packageManager: string,
   database = 'postgresql',
+  frontend = 'react',
 ): FileOperation[] {
   const pmRun = packageManager === 'npm' ? 'npm run' : packageManager;
   const pmFilter = packageManager === 'pnpm' ? 'pnpm --filter' : packageManager === 'yarn' ? 'yarn workspace' : 'npm --workspace';
@@ -173,23 +174,27 @@ export function getWorkspaceBaseOperations(
       break;
   }
 
+  const scripts: Record<string, string> = {
+    dev: `${pmFilter} ./apps/* --parallel dev`,
+    build: `${pmFilter} ./packages/* --filter ./apps/* build`,
+    test: `${pmFilter} ./packages/* --filter ./apps/* test`,
+    lint: `${pmFilter} ./packages/* --filter ./apps/* lint`,
+    format: `${pmFilter} ./packages/* --filter ./apps/* format`,
+    ...(frontend !== 'none'
+      ? { 'api:sync': 'dotnet run --project apps/backend/src/API/API.csproj -- --export-openapi && pnpm --filter @project/api-client generate' }
+      : {}),
+    'infra:up': 'docker compose -f infra/compose.yaml up -d',
+    'infra:down': 'docker compose -f infra/compose.yaml down',
+    'db:migrate': 'dotnet run --project apps/backend/src/API/API.csproj -- --migrate',
+    'db:seed': 'dotnet run --project apps/backend/src/API/API.csproj -- --seed',
+  };
+
   const rootPackageJson = {
     name: projectName,
     version: '1.0.0',
     private: true,
     type: 'module',
-    scripts: {
-      dev: `${pmFilter} ./apps/* --parallel dev`,
-      build: `${pmFilter} ./packages/* --filter ./apps/* build`,
-      test: `${pmFilter} ./packages/* --filter ./apps/* test`,
-      lint: `${pmFilter} ./packages/* --filter ./apps/* lint`,
-      format: `${pmFilter} ./packages/* --filter ./apps/* format`,
-      'api:sync': 'dotnet run --project apps/backend/src/API/API.csproj -- --export-openapi && pnpm --filter @project/api-client generate',
-      'infra:up': 'docker compose -f infra/compose.yaml up -d',
-      'infra:down': 'docker compose -f infra/compose.yaml down',
-      'db:migrate': 'dotnet run --project apps/backend/src/API/API.csproj -- --migrate',
-      'db:seed': 'dotnet run --project apps/backend/src/API/API.csproj -- --seed',
-    },
+    scripts,
     devDependencies: {
       typescript: '^7.0.2',
     },
@@ -211,7 +216,9 @@ export function getWorkspaceBaseOperations(
   const readmeLines = [
     `# ${projectName}`,
     '',
-    'Full-stack project generated with [Template-P](https://github.com/ThienHN0910/Template-P).',
+    frontend === 'none'
+      ? 'Backend API service generated with [Template-P](https://github.com/ThienHN0910/Template-P).'
+      : 'Full-stack project generated with [Template-P](https://github.com/ThienHN0910/Template-P).',
     '',
     '## Getting Started',
     '',
@@ -223,12 +230,12 @@ export function getWorkspaceBaseOperations(
       '# 1. Start database container',
       `${pmRun} infra:up`,
       '',
-      '# 2. Start development servers',
+      frontend === 'none' ? '# 2. Start development server' : '# 2. Start development servers',
       `${pmRun} dev`,
     );
   } else {
     readmeLines.push(
-      '# Start development servers',
+      frontend === 'none' ? '# Start development server' : '# Start development servers',
       `${pmRun} dev`,
     );
   }
