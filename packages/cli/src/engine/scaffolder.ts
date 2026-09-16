@@ -7,6 +7,14 @@ import { generateManifest, serializeManifest } from './manifest/manifest.js';
 import { getWorkspaceBaseOperations } from './composer/layers/workspace-base.js';
 import { getDotnetCleanOperations } from './composer/layers/dotnet-clean.js';
 import { getDotnetEfPostgresqlOperations } from './composer/layers/dotnet-ef-postgresql.js';
+import { getDotnetEfSqlServerOperations } from './composer/layers/dotnet-ef-sqlserver.js';
+import { getDotnetEfMySqlOperations } from './composer/layers/dotnet-ef-mysql.js';
+import { getDotnetEfSqliteOperations } from './composer/layers/dotnet-ef-sqlite.js';
+import { getDotnetMongoDbOperations } from './composer/layers/dotnet-mongodb.js';
+import { getNodePrismaOperations } from './composer/layers/node-prisma.js';
+import { getNodeMongoOperations } from './composer/layers/node-mongodb.js';
+import { getPythonSqlAlchemyOperations } from './composer/layers/python-sqlalchemy.js';
+import { getPythonMongoOperations } from './composer/layers/python-mongodb.js';
 import { getOpenApiClientOperations } from './composer/layers/openapi-client.js';
 import { getReactViteOperations } from './composer/layers/react-vite.js';
 import type { FileOperation } from './composer/operations.js';
@@ -15,22 +23,65 @@ import { VirtualFileSystem } from './composer/virtual-fs.js';
 
 export async function scaffoldStack(config: StackConfiguration, targetDir: string): Promise<void> {
   const normalizedConfig = normalizeConfiguration(config);
+  const normalizedConfigWithDb = normalizedConfig as typeof normalizedConfig & { database?: string };
+  normalizedConfigWithDb.database = normalizedConfigWithDb.database ?? normalizedConfig.persistence?.database;
+
   const resolution = resolveCapabilities(normalizedConfig);
   const manifest = generateManifest(resolution);
 
   const operations: FileOperation[] = [];
 
   // Workspace Base
-  operations.push(...getWorkspaceBaseOperations(normalizedConfig.project.name, normalizedConfig.project.packageManager));
+  operations.push(
+    ...getWorkspaceBaseOperations(
+      normalizedConfig.project.name,
+      normalizedConfig.project.packageManager,
+      normalizedConfigWithDb.database,
+    ),
+  );
 
   // Backend
   if (resolution.resolvedIds.includes('backend/aspnet-core') && resolution.resolvedIds.includes('architecture/clean')) {
     operations.push(...getDotnetCleanOperations(normalizedConfig.project.name));
   }
 
-  // Database / Data Access
-  if (resolution.resolvedIds.includes('database/postgresql') && resolution.resolvedIds.includes('runtime/dotnet')) {
-    operations.push(...getDotnetEfPostgresqlOperations());
+  // Database / Data Access Layer Dispatch
+  if (resolution.resolvedIds.includes('runtime/dotnet')) {
+    if (resolution.resolvedIds.includes('database/postgresql')) {
+      operations.push(...getDotnetEfPostgresqlOperations());
+    } else if (resolution.resolvedIds.includes('database/sqlserver')) {
+      operations.push(...getDotnetEfSqlServerOperations());
+    } else if (resolution.resolvedIds.includes('database/mysql')) {
+      operations.push(...getDotnetEfMySqlOperations());
+    } else if (resolution.resolvedIds.includes('database/sqlite')) {
+      operations.push(...getDotnetEfSqliteOperations());
+    } else if (resolution.resolvedIds.includes('database/mongodb')) {
+      operations.push(...getDotnetMongoDbOperations());
+    }
+  } else if (resolution.resolvedIds.includes('runtime/node')) {
+    if (resolution.resolvedIds.includes('database/postgresql')) {
+      operations.push(...getNodePrismaOperations('postgresql'));
+    } else if (resolution.resolvedIds.includes('database/sqlserver')) {
+      operations.push(...getNodePrismaOperations('sqlserver'));
+    } else if (resolution.resolvedIds.includes('database/mysql')) {
+      operations.push(...getNodePrismaOperations('mysql'));
+    } else if (resolution.resolvedIds.includes('database/sqlite')) {
+      operations.push(...getNodePrismaOperations('sqlite'));
+    } else if (resolution.resolvedIds.includes('database/mongodb')) {
+      operations.push(...getNodeMongoOperations());
+    }
+  } else if (resolution.resolvedIds.includes('runtime/python')) {
+    if (resolution.resolvedIds.includes('database/postgresql')) {
+      operations.push(...getPythonSqlAlchemyOperations('postgresql'));
+    } else if (resolution.resolvedIds.includes('database/sqlserver')) {
+      operations.push(...getPythonSqlAlchemyOperations('sqlserver'));
+    } else if (resolution.resolvedIds.includes('database/mysql')) {
+      operations.push(...getPythonSqlAlchemyOperations('mysql'));
+    } else if (resolution.resolvedIds.includes('database/sqlite')) {
+      operations.push(...getPythonSqlAlchemyOperations('sqlite'));
+    } else if (resolution.resolvedIds.includes('database/mongodb')) {
+      operations.push(...getPythonMongoOperations());
+    }
   }
 
   // Client
