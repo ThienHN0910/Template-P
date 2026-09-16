@@ -1,42 +1,88 @@
-name: 🐛 Bug Report
-description: File a bug report to help us fix issues in @thienhn/create-template
+name: Bug report
+description: Report a reproducible problem with a Template-P generated project or CLI command.
 title: "[Bug]: "
 labels: ["needs-triage", "bug"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thank you for reporting an issue! Please provide as much detail as possible.
   - type: textarea
     id: description
     attributes:
-      label: Describe the Bug
-      description: A clear and concise description of what the bug is.
-      placeholder: What went wrong?
+      label: Description
+      description: Describe the problem and its impact.
     validations:
       required: true
   - type: input
+    id: cli-version
+    attributes:
+      label: CLI version
+      description: Provide the exact installed version of @thienhn/create-template.
+      placeholder: "@thienhn/create-template 3.0.0"
+    validations:
+      required: true
+  - type: textarea
     id: command
     attributes:
-      label: Command Executed
-      description: What exact command did you run?
-      placeholder: e.g. npx @thienhn/create-template my-app --backend dotnet --frontend vue3
-    validations:
-      required: true
-  - type: textarea
-    id: environment
-    attributes:
-      label: Environment Info
-      description: OS, Node.js version, package manager version.
-      placeholder: |
-        - OS: Windows 11 / macOS Sonoma / Ubuntu 24.04
-        - Node version: v20.x or v22.x
-        - Package Manager: pnpm / npm / bun
-    validations:
-      required: true
-  - type: textarea
-    id: logs
-    attributes:
-      label: Terminal Output / Error Logs
-      description: Paste any error messages or terminal logs here.
+      label: Exact command
+      description: Paste the complete command that produced the problem.
       render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Normalized configuration or sanitized manifest
+      description: Include the selected options or a sanitized generated manifest. Remove tokens, credentials, and private URLs.
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: List the smallest reliable sequence that reproduces the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: Explain the result you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Explain the result you received.
+    validations:
+      required: true
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system and CPU architecture
+      description: Provide the operating system version and CPU architecture.
+      placeholder: "Windows 11 23H2, x64"
+    validations:
+      required: true
+  - type: textarea
+    id: runtimes
+    attributes:
+      label: Node, package-manager, and backend runtime versions
+      description: Include Node.js, npm/pnpm/yarn/bun, and the selected backend runtime version when applicable.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: terminal-output
+    attributes:
+      label: Sanitized terminal output
+      description: Paste relevant output after removing secrets and private data.
+      render: shell
+    validations:
+      required: true
+  - type: checkboxes
+    id: secrets-removed
+    attributes:
+      label: Secret removal confirmation
+      options:
+        - label: I removed secrets, access tokens, credentials, and private URLs from this report.
+          required: true

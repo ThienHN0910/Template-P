@@ -107,9 +107,9 @@ export async function run() {
     const missing = checkResults.filter((r) => !r.installed);
 
     if (missing.length === 0) {
-      s.stop(pc.green(`✓ All required runtimes (.NET / Node / Python) are verified & ready.`));
+      s.stop(pc.green('All required runtimes are available.'));
     } else {
-      s.stop(pc.yellow(`⚠️ Some runtimes are missing on your machine.`));
+      s.stop(pc.yellow('One or more required runtimes are missing.'));
       await handleMissingTools(missing);
     }
 
@@ -163,9 +163,9 @@ export async function run() {
 
   try {
     await scaffoldProject(config);
-    scaffoldSpinner.stop(pc.green(`✓ Successfully assembled project!`));
+    scaffoldSpinner.stop(pc.green('Project assembled successfully.'));
   } catch (err: any) {
-    scaffoldSpinner.stop(pc.red(`✗ Scaffolding failed.`));
+    scaffoldSpinner.stop(pc.red('Scaffolding failed.'));
     p.log.error(err.message || String(err));
     process.exit(1);
   }
@@ -179,9 +179,9 @@ export async function run() {
     config.ai.enabled === false
       ? 'AI skill and MCP setup skipped (--no-ai).'
       : `AI Agent super-powers loaded:\n` +
-        `  • Agent instructions in ${pc.bold('AGENTS.md')}, ${pc.bold('CLAUDE.md')}, ${pc.bold('.cursorrules')}\n` +
-        `  • Agent skills in ${pc.bold('.gemini/skills/')}\n` +
-        `  • MCP servers in ${pc.bold('mcp.json')}`;
+        `  - Agent instructions in ${pc.bold('AGENTS.md')}, ${pc.bold('CLAUDE.md')}, ${pc.bold('.cursorrules')}\n` +
+        `  - Agent skills in ${pc.bold('.gemini/skills/')}\n` +
+        `  - MCP servers in ${pc.bold('mcp.json')}`;
 
   p.note(
     `Next steps to get started:\n\n` +
@@ -189,10 +189,10 @@ export async function run() {
       `  2. ${pc.cyan(`${config.packageManager} install`)}${dbInstruction}\n` +
       `  3. ${pc.cyan(`${config.packageManager} dev`)}         (Runs Backend & Frontend simultaneously!)\n\n` +
       aiSummary,
-    pc.bold(pc.green('Project Ready! 🚀'))
+    pc.bold(pc.green('Project ready'))
   );
 
-  p.outro(pc.bold(pc.cyan(`Happy coding with ${config.projectName}! ✨`)));
+  p.outro(pc.bold(pc.cyan(`Happy coding with ${config.projectName}!`)));
 }
 
 run().catch((err) => {

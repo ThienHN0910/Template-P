@@ -1,29 +1,39 @@
-# 3. Kiến Trúc Lai (Hybrid Upstream Delegation) & Cập Nhật Tự Động Dynamic Skills
+# 3. Hybrid upstream delegation and dynamic skills
 
 Date: 2026-09-13
 
-## Bối cảnh (Context)
-Trong phiên bản ban đầu, CLI sao chép các template thư mục tĩnh cho Frontend (Vue 3, React, Next.js) và bộ AI Skills. Tuy nhiên, cách tiếp cận này bộc lộ các hạn chế:
-1. **Thiếu các tùy chọn chuẩn của hệ sinh thái**: Lập trình viên quen thuộc với `create-vue@latest` kỳ vọng được chọn đầy đủ các tính năng: TypeScript, Vue Router, Pinia, ESLint, Prettier, Vitest, Cypress/Playwright.
-2. **Rủi ro lỗi thời phiên bản (Version Staleness)**: Khi Vue 3.6, Vite 7 hay Next.js phiên bản mới ra mắt, các template tĩnh sẽ bị tụt hậu so với chuẩn mới nhất của cộng đồng.
-3. **Bộ AI Skills không đầy đủ**: Bộ `mattpocock/skills` thực tế có hơn 37 kỹ năng và liên tục được cập nhật trên GitHub, việc chỉ copy cứng 6 file làm mất đi sức mạnh của hệ sinh thái `skills.sh`.
+**Status:** Superseded by the approved v3 capability architecture on 2026-09-16.
 
-## Quyết định Kiến trúc (Decision)
-1. **Chuyển đổi sang Mô hình Lai (Hybrid Upstream Scaffolder)**:
-   - CLI sẽ hỏi người dùng toàn bộ các tùy chọn chuẩn mực như các official tool (`create-vue`, `create-next-app`).
-   - CLI sẽ gọi trực tiếp official generator với các cờ tương ứng (ví dụ: `npm create vue@latest apps/frontend -- --ts --router --pinia --eslint --prettier`).
-   - Sau đó, CLI sẽ tiêm (layering) các tính năng tùy biến độc quyền:
-     - Theme Switcher (Dark/Light mode 60fps)
-     - SCSS Preprocessor / Tailwind CSS
-     - Đa ngôn ngữ i18n (English & Tiếng Việt)
-     - Cấu hình Proxy API và Typed API Client kết nối trực tiếp với Backend đã chọn.
-   - Nếu môi trường offline hoặc lệnh official thất bại, tự động fallback về kho template tĩnh tích hợp sẵn.
-2. **Tích hợp Công cụ Quản lý Kỹ năng Chính Thức (`skills.sh`)**:
-   - Tận dụng lệnh chính thức: `npx skills@latest add <owner/repo> --agent * --all --copy -y` để tải trực tiếp phiên bản mới nhất từ GitHub (`mattpocock/skills`).
-   - Tự động nạp vào các thư mục agent đích (`.gemini/skills/`, `.claude/skills/`, `.cursor/skills/`).
-   - Duy trì kho dự phòng offline trong thư mục `templates/skills/` để hoạt động khi không có internet.
+This ADR records the historical v1/v2 decision. New implementation work follows the v3 design specification.
 
-## Hệ quả (Consequences)
-- Dự án sinh ra luôn sở hữu phiên bản mới nhất của các framework mà không cần bảo trì thủ công hàng chục template.
-- Bộ kỹ năng AI luôn đầy đủ và cập nhật trực tiếp từ kho chính thức của Matt Pocock.
-- Trải nghiệm lập trình viên đạt đẳng cấp chuyên nghiệp chuẩn mực của hệ sinh thái web hiện đại.
+## Context
+
+The initial CLI copied static frontend templates for Vue 3, React, Next.js, and AI skills. That approach exposed several limitations:
+
+1. **Missing ecosystem-standard choices:** Developers accustomed to `create-vue@latest` expect options such as TypeScript, Vue Router, Pinia, ESLint, Prettier, Vitest, and Cypress or Playwright.
+2. **Version staleness risk:** When Vue, Vite, or Next.js releases a new version, static templates can fall behind current community conventions.
+3. **Incomplete AI-skill sets:** `mattpocock/skills` contains more than 37 skills and changes on GitHub; copying only a small fixed set loses much of that ecosystem.
+
+## Decision
+
+1. Adopt a hybrid upstream scaffolder:
+   - The CLI asks for standard ecosystem choices similar to official tools such as `create-vue` and `create-next-app`.
+   - The CLI calls an official generator with matching flags, for example `npm create vue@latest apps/frontend -- --ts --router --pinia --eslint --prettier`.
+   - It then layers Template-P customization onto the result:
+     - A dark/light theme switcher.
+     - SCSS preprocessing or Tailwind CSS.
+     - English and Vietnamese i18n.
+     - API proxy configuration and a typed API client for the selected backend.
+   - When offline or when the official command fails, the CLI falls back to bundled static templates.
+2. Integrate the `skills.sh` management tool:
+   - Use `npx skills@latest add <owner/repo> --agent * --all --copy -y` to retrieve current skills from GitHub, including `mattpocock/skills`.
+   - Load skills into selected agent directories such as `.gemini/skills/`, `.claude/skills/`, and `.cursor/skills/`.
+   - Keep an offline fallback under `templates/skills/`.
+
+## Consequences
+
+- Generated projects are intended to receive current framework versions without maintaining every static template manually.
+- The AI-skill set is intended to remain complete and current through its upstream source.
+- The developer experience is intended to follow modern web-ecosystem conventions.
+
+These are historical v1/v2 decisions. Remote generators and dynamic skills remain mutable integration points, and the [approved v3 capability architecture](../superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md) defines the planned replacement direction.

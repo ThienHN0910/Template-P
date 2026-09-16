@@ -1,6 +1,4 @@
-import { createI18n } from 'vue-i18n';
-
-const messages = {
+export const vueMessages = {
   en: {
     welcome: 'Full-stack starter project',
     subtitle: 'Built with Template-P',
@@ -23,11 +21,8 @@ const messages = {
     loading: 'Đang tải dữ liệu...',
     healthy: 'Đã kết nối và hoạt động ổn định',
   },
-};
+} as const;
 
-export const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  fallbackLocale: 'en',
-  messages,
-});
+export function renderVueI18nModule(): string {
+  return `import { createI18n } from 'vue-i18n';\n\nconst messages = ${JSON.stringify(vueMessages, null, 2)};\n\nexport const i18n = createI18n({\n  legacy: false,\n  locale: 'en',\n  fallbackLocale: 'en',\n  messages,\n});\n`;
+}

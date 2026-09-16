@@ -38,7 +38,7 @@ export async function promptFrontend(): Promise<FrontendResult> {
       { value: 'vitest', label: 'Vitest', hint: 'Unit testing framework' },
       { value: 'darkMode', label: 'Theme Switcher (Dark / Light)', hint: '60fps GPU-accelerated theme toggle' },
       { value: 'scss', label: 'SCSS Preprocessor', hint: 'Variables, mixins & nested styling' },
-      { value: 'i18n', label: 'Internationalization (i18n)', hint: 'Pre-configured English & Tiếng Việt' },
+      { value: 'i18n', label: 'Internationalization (i18n)', hint: 'Pre-configured English and Vietnamese' },
     ];
     defaultValues = ['ts', 'router', 'pinia', 'eslint', 'prettier', 'darkMode', 'scss', 'i18n'];
   } else if (framework === 'react') {
@@ -50,7 +50,7 @@ export async function promptFrontend(): Promise<FrontendResult> {
       { value: 'vitest', label: 'Vitest', hint: 'Unit testing' },
       { value: 'darkMode', label: 'Theme Switcher (Dark / Light)', hint: '60fps theme context' },
       { value: 'scss', label: 'SCSS Preprocessor', hint: 'SCSS styling' },
-      { value: 'i18n', label: 'Internationalization (i18next)', hint: 'English & Tiếng Việt' },
+      { value: 'i18n', label: 'Internationalization (i18next)', hint: 'English and Vietnamese' },
     ];
     defaultValues = ['ts', 'router', 'zustand', 'eslint', 'darkMode', 'scss', 'i18n'];
   } else if (framework === 'nextjs') {

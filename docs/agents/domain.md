@@ -1,18 +1,18 @@
-# Domain Docs
+# Domain documentation
 
-How the engineering skills should consume this repo's domain documentation when exploring the codebase.
+This page explains how engineering skills should use the repository's domain documentation while exploring the codebase.
 
-## Before exploring, read these
+## Read before exploring
 
-- **`CONTEXT.md`** at the repo root, or
-- **`CONTEXT-MAP.md`** at the repo root if it exists: it points at one `CONTEXT.md` per context. Read each one relevant to the topic.
-- **`docs/adr/`**: read ADRs that touch the area you're about to work in. In multi-context repos, also check `src/<context>/docs/adr/` for context-scoped decisions.
+- Read **`CONTEXT.md`** at the repository root; or
+- Read **`CONTEXT-MAP.md`** at the repository root when it exists. It identifies one `CONTEXT.md` file per context; read each context relevant to the work.
+- Read relevant records in **`docs/adr/`**. In a multi-context repository, also inspect `src/<context>/docs/adr/` for context-scoped decisions.
 
-If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. The `/domain-modeling` skill creates them lazily when terms or decisions actually get resolved.
+If any of these paths does not exist, proceed silently. Do not flag the absence or propose creating a document before a term or decision genuinely requires one. The `/domain-modeling` skill creates domain documentation lazily.
 
 ## File structure
 
-Single-context repo:
+For this single-context repository:
 
 ```text
 /
@@ -22,12 +22,12 @@ Single-context repo:
 └── packages/
 ```
 
-## Use the glossary's vocabulary
+## Use glossary vocabulary
 
-When your output names a domain concept (in an issue title, a refactor proposal, a hypothesis, a test name), use the term as defined in `CONTEXT.md`. Don't drift to synonyms the glossary explicitly avoids.
+When naming a domain concept in an issue title, refactor proposal, hypothesis, or test name, use the term defined in `CONTEXT.md`. Do not drift to a synonym that the glossary explicitly avoids.
 
-If the concept you need isn't in the glossary yet, that's a signal: either you're inventing language the project doesn't use (reconsider) or there's a real gap (note it for `/domain-modeling`).
+If a needed concept is absent from the glossary, either the work is inventing language the project does not use, or the glossary has a real gap. Reconsider the former and record the latter for `/domain-modeling`.
 
 ## Flag ADR conflicts
 
-If your output contradicts an existing ADR, surface it explicitly rather than silently overriding.
+If a proposal contradicts an existing ADR, surface the conflict explicitly rather than silently overriding it. The three historical v1/v2 ADRs are superseded; new implementation work follows the approved v3 design specification.

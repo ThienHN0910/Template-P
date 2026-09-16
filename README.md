@@ -1,198 +1,82 @@
-# Universal Fullstack Template & CLI Engine (`@thienhn/create-template`)
+# Template-P
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/@thienhn/create-template"><img src="https://img.shields.io/npm/v/@thienhn/create-template.svg?style=flat-square&color=cb3837" alt="npm version" /></a>
-  <a href="https://www.npmjs.com/package/@thienhn/create-template"><img src="https://img.shields.io/npm/dm/@thienhn/create-template.svg?style=flat-square" alt="npm downloads" /></a>
-  <a href="https://github.com/ThienHN0910/Template-P/discussions"><img src="https://img.shields.io/badge/Discussions-Join%20Community-blue?style=flat-square&logo=github" alt="GitHub Discussions" /></a>
-  <a href="https://github.com/ThienHN0910/Template-P/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License: MIT" /></a>
-  <a href="https://github.com/ThienHN0910/Template-P/pulls"><img src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=flat-square" alt="PRs Welcome" /></a>
-</p>
+Template-P is the source repository for `@thienhn/create-template`, an interactive CLI that scaffolds full-stack monorepos from bundled blueprints and optional upstream integrations.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/TypeScript-5.7-blue.svg?style=flat-square&logo=typescript" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/.NET-8.0_LTS-512BD4.svg?style=flat-square&logo=dotnet" alt=".NET 8" />
-  <img src="https://img.shields.io/badge/Vue-3.5-4FC08D.svg?style=flat-square&logo=vue.js" alt="Vue 3" />
-  <img src="https://img.shields.io/badge/React-18%2F19-61DAFB.svg?style=flat-square&logo=react" alt="React" />
-  <img src="https://img.shields.io/badge/Next.js-15-black.svg?style=flat-square&logo=next.js" alt="Next.js" />
-  <img src="https://img.shields.io/badge/FastAPI-0.115-009688.svg?style=flat-square&logo=fastapi" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/Docker-Postgres%20%7C%20MySQL-2496ED.svg?style=flat-square&logo=docker" alt="Docker" />
-</p>
+## Quick start
 
-> **Universal Fullstack Scaffolder & GitHub Template**: Khởi tạo một nền tảng Fullstack có thể tùy biến bằng giao diện terminal tương tác. Mỗi blueprint cần được xem xét và kiểm thử theo compatibility contract trước khi dùng cho production.
-
----
-
-## 🌟 Điểm Nổi Bật (Key Features)
-
-- ⚡ **2 Chế độ Sử dụng Tiện lợi**:
-  1. **NPX Trực tiếp**: Chạy `npx @thienhn/create-template <tên-dự-án>` ở bất kỳ máy nào mà không cần cài trước.
-  2. **GitHub Template Repository**: Nhấn **"Use this template"** trên GitHub, clone về máy và gõ `npm run init`.
-- 🎯 **Giao diện Tương tác Terminal Hiện đại** (`@clack/prompts`):
-  - Phím mũi tên di chuyển.
-  - Phím **`<Space>`** để bật/tắt nhiều tùy chọn cùng lúc (Multi-select).
-  - Phím **`<Enter>`** để xác nhận (hoặc nhấn Enter nhận ngay tên mặc định `my-p-app`).
-- 🛠️ **Pre-flight Check & Tự Động Cài Đặt Môi Trường**:
-  - Tự động phát hiện xem máy đã cài `dotnet`, `node`, hay `python` chưa.
-  - Tự động kích hoạt Package Manager của hệ điều hành (`winget` trên Windows, `brew` trên macOS, `apt` trên Linux) để cài đặt nếu còn thiếu.
-- 🏗️ **Ma trận Kiến trúc Backend Chuyên nghiệp**:
-  - **.NET 8 LTS (C#)**:
-    - Clean Architecture / DDD chuẩn 4 layer: `Domain`, `Application`, `Infrastructure`, `API`.
-    - Classic Web API (MVC pattern).
-    - Minimal Blank API.
-  - **Node.js (TypeScript)**:
-    - Express + Clean Architecture / DDD.
-    - Fastify + Modular Plugins.
-    - Blank Minimal TypeScript Server.
-  - **FastAPI (Python)**:
-    - Modular Architecture (Routers, Schemas, Services, SQLModel).
-    - Minimal Blank FastAPI.
-- 🎨 **Kiến Trúc Hybrid Upstream Frontend & Custom Layering**:
-  - Tích hợp trực tiếp generator chính thức của framework (`create-vue@latest`, `create-next-app@latest`, React Vite, Nuxt 3) với trọn bộ feature flags (TypeScript, Router, Pinia, ESLint, Prettier, Vitest).
-  - **Tự động chồng lớp (Custom Layers)**:
-    - 🌓 **Theme Switcher (Dark / Light mode)**: Tối ưu chuẩn phần cứng 60fps GPU-accelerated.
-    - 💅 **SCSS & Tailwind CSS Preprocessors**.
-    - 🌐 **Đa ngôn ngữ i18n**: Cấu hình sẵn song ngữ Anh - Việt.
-    - 🔌 **API Client & Reverse Proxy**: Gọi trực tiếp `/api` không sợ lỗi CORS.
-- 💻 **Tùy Chọn IDE & Loại Bỏ Triệt Để Thư Mục Rác (Zero Repo Pollution)**:
-  - Cho phép người dùng chọn IDE đang sử dụng: **VS Code / Cursor**, **Visual Studio**, **JetBrains Rider / WebStorm** hoặc **Minimal**.
-  - Tự động may đo `.vscode/extensions.json` và `settings.json` đúng theo tech stack đã chọn.
-  - Cho phép chọn trợ lý AI: **Antigravity / Gemini**, **Claude Code**, **Cursor**, **Windsurf**, **Roo Code**.
-  - Không sinh thừa bất kỳ thư mục rác nào ngoài các công cụ bạn đã chọn.
-- 🗄️ **Tùy chọn Database & Tự Động Sinh Docker Compose**:
-  - Hỗ trợ **PostgreSQL 16 Alpine**, **MySQL 8.4**, **SQLite**, hoặc **None**.
-  - Tự động sinh `docker-compose.yml` kèm healthcheck và giao diện quản trị (pgAdmin / phpMyAdmin).
-  - Tự động sinh file `.env` cục bộ và `.env.example` an toàn theo chuẩn **Zero-Leakage Security**.
-- 🤖 **Đóng Gói Sẵn 52 Production AI Agent Skills & MCP**:
-  - **37 Matt Pocock Skills**: `ask-matt`, `to-tickets`, `to-spec`, `grill-me`, `domain-modeling`, `triage`, `tdd`, `code-review`, `wayfinder`...
-  - **10 Design Taste Skills**: `design-taste-frontend`, `high-end-visual-design`, `industrial-brutalist-ui`, `minimalist-ui`, `image-to-code`...
-  - **5 Ponytail Anti-Over-Engineering Skills**: `ponytail`, `ponytail-review`, `ponytail-audit`, `ponytail-gain`, `ponytail-help`.
-  - **MCP Servers** (`mcp.json`): Chrome DevTools, Filesystem, Database connectors.
-
----
-
-## 🚀 Hướng Dẫn Sử Dụng (Quick Start)
-
-### Cách 1: Sử dụng qua lệnh NPX (Khuyến nghị)
+Template-P v2 requires Node.js 22.13 or later.
 
 ```bash
 npx @thienhn/create-template my-app
 ```
 
-Hoặc chạy chế độ tương tác:
+Run the command without a project name to choose the name interactively. The npm CLI is the primary installation path; this engine repository is not a project to copy through GitHub's **Use this template** button.
+
+## What the current v2 CLI offers
+
+The v2 CLI offers these selectable families:
+
+- Backends: .NET 8, Node.js, and FastAPI.
+- Frontends: Vue, React, Next.js, and Nuxt.
+- Databases: PostgreSQL, MySQL, SQLite, or no database.
+- Package managers: pnpm, npm, and Bun.
+
+It can scaffold from bundled blueprints and, when network access is allowed, use optional upstream frontend generators and dynamic AI-skill integrations. Offered combinations are not automatically production-verified; see the compatibility contract for the evidence boundary.
+
+## Verified compatibility
+
+The current full scaffold, install, and build CI matrix verifies only these blank-backend combinations from a packed CLI artifact with `--offline --no-ai`:
+
+- Node.js / blank architecture / npm
+- .NET 8 / blank architecture / pnpm
+- FastAPI / blank architecture / npm
+
+Other selectable v2 combinations are offered, but are not described as production-verified until they have equivalent evidence. See the [current v2 compatibility contract](docs/reference/compatibility.md).
+
+## Interactive usage
+
 ```bash
 npx @thienhn/create-template
 ```
 
-#### Chế độ Tự Động / CI (Non-interactive Mode với CLI Flags):
+The interactive flow asks for a project name, package manager, backend and architecture, database, frontend, IDE settings, and optional AI tooling. It performs a preflight check for the selected backend runtime and presents installation guidance when a required runtime is unavailable.
+
+## Non-interactive usage
+
 ```bash
 npx @thienhn/create-template my-app \
   --backend dotnet \
   --arch webapi-ddd \
   --frontend vue3 \
-  --db postgres \
-  --pm pnpm \
+  --database postgres \
+  --package-manager pnpm \
   --yes
 ```
 
-| Flag | Rút gọn | Tùy chọn | Mô tả |
-|---|---|---|---|
-| `--backend` | `-b` | `dotnet`, `node`, `fastapi` | Framework backend |
-| `--arch` | `-a` | `webapi-ddd`, `webapi-mvc`, `express-ddd`, `fastify-clean`, `modular`, `blank` | Kiến trúc backend |
-| `--frontend` | `-f` | `vue3`, `react`, `nextjs`, `nuxt3` | Framework frontend |
-| `--db`, `--database` | `-d` | `postgres`, `mysql`, `sqlite`, `none` | Động cơ Database |
-| `--pm`, `--package-manager` | `-p` | `pnpm`, `npm`, `bun` | Trình quản lý gói |
-| `--offline` | | | Chỉ dùng blueprint vendored, không gọi upstream generator |
-| `--no-ai` | | | Không cài Agent Skills hoặc MCP configuration |
-| `--yes` | `-y` | | Bỏ qua hỏi đáp, dùng cấu hình mặc định |
+See the [command reference](docs/reference/commands.md) and [automation guide](docs/getting-started/automation.md) for every current v2 option and default.
 
----
+## Trust and network boundaries
 
-### Cách 2: Sử dụng làm GitHub Template
-
-1. Nhấn nút **"Use this template"** ở đầu trang GitHub repo này để tạo repo mới.
-2. Clone repo mới về máy:
-   ```bash
-   git clone https://github.com/<username>/<your-new-repo>.git
-   cd <your-new-repo>
-   ```
-3. Khởi chạy wizard:
-   ```bash
-   npm run init
-   ```
-
----
-
-## 📂 Cấu Trúc Dự Án Sau Khi Khởi Tạo (Monorepo Structure)
-
-```text
-my-app/
-├── apps/
-│   ├── backend/               # .NET 8 DDD / Node.js TS / FastAPI
-│   │   ├── src/
-│   │   │   ├── Domain/        # Entities, Value Objects
-│   │   │   ├── Application/   # CQRS, Features, Interfaces
-│   │   │   ├── Infrastructure/# EF Core, DB Context (Postgres/MySQL/SQLite)
-│   │   │   └── API/           # Controllers, Swagger, CORS, Program.cs
-│   │   └── .env.example
-│   │
-│   └── frontend/              # Vue 3 / React / Next.js / Nuxt 3
-│       ├── src/
-│       │   ├── api/client.ts  # Typed API Client (kết nối trực tiếp tới BE)
-│       │   ├── styles/        # Theme SCSS (Dark/Light 60fps)
-│       │   ├── i18n.ts        # Đa ngôn ngữ (VI / EN)
-│       │   └── App.vue        # Giao diện mẫu kết nối dữ liệu từ Backend
-│       └── vite.config.ts     # Proxy tự động /api -> Backend port
-│
-├── .vscode/                   # Cấu hình IDE được may đo riêng (nếu chọn)
-│   ├── extensions.json        # Gợi ý extensions theo đúng stack đã chọn
-│   └── settings.json          # Format on save, linter settings
-│
-├── .gemini/                   # Hoặc .claude/, .cursor/ (theo AI agent đã chọn)
-│   ├── skills/                # 52 Production-grade Agent Skills
-│   └── mcp.json               # Cấu hình Chrome DevTools, Filesystem, DB
-│
-├── docs/                      # ADRs và Agent Domain Docs
-├── .env                       # Local dev connection strings (ĐÃ ĐƯỢC IGNORE)
-├── .env.example               # Template biến môi trường mẫu (Zero-Leakage)
-├── .gitignore                 # Composite gitignore tự động gộp theo stack
-├── docker-compose.yml         # Container Database (Postgres/MySQL + GUI)
-├── package.json               # Quản lý Monorepo & script dev đồng thời
-└── README.md
-```
-
----
-
-## 🏃‍♂️ Khởi Chạy Dự Án (All-in-One Dev Script)
-
-Chỉ với 1 lệnh duy nhất ở thư mục gốc của dự án vừa sinh ra:
+Use `--offline --no-ai` to use bundled blueprints while avoiding upstream-generator and dynamic-skill downloads:
 
 ```bash
-cd my-app
-pnpm install
-docker compose up -d    # Khởi động Database (nếu chọn Postgres/MySQL)
-pnpm dev                # Chạy đồng thời cả Backend và Frontend!
+npx @thienhn/create-template my-app --offline --no-ai --yes
 ```
 
-- **Frontend**: `http://localhost:5173`
-- **Backend Swagger API**: `http://localhost:5050/swagger`
+Remote `@latest` generators and dynamic skills are integration points whose output may change. Review third-party output, credentials, and deployment settings before production use. Template-P does not add telemetry to generated projects.
 
----
+## Documentation
 
-## 🤝 Đóng Góp Phát Triển (Contributing)
+Start with the [documentation index](docs/README.md), then consult the installation, command, compatibility, and automation guides.
 
-Dự án này là mã nguồn mở và chúng tôi rất hoan nghênh sự đóng góp từ cộng đồng lập trình viên!
+## Contributing and security
 
-* 💬 **Trao đổi & Đóng góp ý kiến**: Tham gia [GitHub Discussions](https://github.com/ThienHN0910/Template-P/discussions).
-* 🐛 **Báo cáo lỗi**: Mở [Issue Bug Report](https://github.com/ThienHN0910/Template-P/issues/new?template=bug_report.yml).
-* 💡 **Đề xuất tính năng mới**: Mở [Feature Request](https://github.com/ThienHN0910/Template-P/issues/new?template=feature_request.yml).
-* 🛠️ **Hướng dẫn đóng góp chi tiết**: Xem file [CONTRIBUTING.md](CONTRIBUTING.md).
-* 📜 **Quy tắc ứng xử cộng đồng**: Xem file [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
-* 🔒 **Báo cáo lỗ hổng bảo mật**: Xem [SECURITY.md](SECURITY.md).
-* 🧭 **Phạm vi hỗ trợ hiện tại**: Xem [docs/compatibility.md](docs/compatibility.md).
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report vulnerabilities according to [SECURITY.md](SECURITY.md), not through public issues. Community support options are in [SUPPORT.md](SUPPORT.md).
 
----
+## v3 roadmap
 
-## 📄 Bản Quyền (License)
+The v3 capability architecture is [approved as a design specification](docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md). Its capability registry, lifecycle commands, expanded persistence contract, and support tiers are planned work; they are not shipped v2 behavior.
 
-Dự án được phát hành theo giấy phép [MIT License](LICENSE) © 2026 ThienHN0910.
-Tự do sử dụng, chỉnh sửa và phân phối cho các dự án thương mại lẫn mã nguồn mở.
+## License
+
+[MIT](LICENSE) © 2026 ThienHN0910.

@@ -1,100 +1,65 @@
-# Contributing to Template-P & @thienhn/create-template
+# Contributing to Template-P and @thienhn/create-template
 
-Welcome to the project! We are thrilled that you want to contribute to `@thienhn/create-template`. Whether you are fixing bugs, adding new blueprints (e.g., Go, Rust, Svelte), improving documentation, or proposing new features, your help is warmly appreciated.
+Thank you for contributing to `@thienhn/create-template`. Bug fixes, documentation improvements, blueprint proposals, and focused feature work are welcome.
 
----
+## Code of Conduct
 
-## 🧭 Code of Conduct
+Participation is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). Report unacceptable behavior through GitHub Issues or the repository owner.
 
-This project and everyone participating in it is governed by our [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior via GitHub Issues or contact the repository owner.
+## Local development
 
----
+Prerequisites:
 
-## 🛠️ Local Development Setup
-
-### Prerequisites
-
-- **Node.js**: >= 22.13.0
-- **Package Manager**: `pnpm` 11.15.1
-- **Git**: Configured on your machine
-
-### 1. Fork & Clone
+- Node.js 22.13 or later
+- pnpm 11.15.1
+- Git
 
 ```bash
 git clone https://github.com/<your-username>/Template-P.git
 cd Template-P
-```
-
-### 2. Install Dependencies
-
-```bash
-pnpm install
-```
-
-### 3. Build & Watch
-
-```bash
-# Build all packages & CLI bundle
-pnpm build
-
-# Check types and the CLI compatibility contract
+pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm test
-
-# Watch mode for CLI development
-pnpm dev
+pnpm build
 ```
 
-### 4. Test Scaffolding Locally
-
-You can test running the CLI directly:
+Use `pnpm dev` to watch the CLI during development. To exercise the local CLI, run:
 
 ```bash
 pnpm create my-test-app
 ```
 
-Or test non-interactive CLI flags:
+For a non-interactive local invocation:
 
 ```bash
-node ./packages/cli/bin/create-template.js my-test-app --backend dotnet --arch webapi-ddd --frontend vue3 --db postgres --yes
+node ./packages/cli/bin/create-template.js my-test-app --backend dotnet --arch webapi-ddd --frontend vue3 --database postgres --yes
 ```
 
----
+Read the [verification guide](docs/contributing/verification.md) before submitting a change. The [current v2 compatibility contract](docs/reference/compatibility.md) defines the difference between offered and full-matrix-verified combinations.
 
-## 🌿 Branching & Commit Discipline
+## Branches and commits
 
-We follow **Conventional Commits**:
+Use Conventional Commits:
 
-- `feat:` A new feature or template
-- `fix:` A bug fix
-- `docs:` Documentation only changes
-- `refactor:` Code changes that neither fix a bug nor add a feature
-- `test:` Adding missing tests or correcting existing tests
-- `chore:` Changes to build process, auxiliary tools, or dependencies
+- `feat:` — a feature or template
+- `fix:` — a bug fix
+- `docs:` — documentation-only work
+- `refactor:` — code changes that neither fix a bug nor add a feature
+- `test:` — tests or test corrections
+- `chore:` — build, tooling, or dependency changes
 
-### Branch Naming Conventions
+Suggested branch names include `feat/<issue-id>-<slug>`, `fix/<issue-id>-<slug>`, `docs/<slug>`, and `refactor/<slug>`.
 
-- `feat/<issue-id>-<slug>`
-- `fix/<issue-id>-<slug>`
-- `docs/<slug>`
-- `refactor/<slug>`
+## Security rules
 
----
+- Never commit credentials, real database connection strings, JWT secrets, or private keys.
+- Keep sensitive values in ignored local `.env` files and maintain sanitized `.env.example` files.
 
-## 🛡️ Zero-Leakage Security Rules (CRITICAL)
+## Pull requests
 
-- **NEVER COMMIT CREDENTIALS:** Absolutely NO API keys, real database connection strings, JWT secrets, or private keys in code or commits.
-- **ALL CREDENTIALS IN .env:** Keep sensitive parameters in local `.env` (ignored by git). Always maintain a sanitized `.env.example`.
+1. Branch from `main` and keep the change focused.
+2. Run the applicable verification commands, including the packed-artifact matrix for CLI or blueprint changes.
+3. Push the branch to your fork and open a pull request against `main`.
+4. Complete the pull-request template with the change and verification evidence.
 
----
-
-## 🚀 Submitting a Pull Request (PR)
-
-1. Create a branch from `main`.
-2. Make your modifications cleanly.
-3. Test locally: ensure `pnpm build` completes with 0 errors.
-4. Push your branch to your fork.
-5. Open a Pull Request against `main` on [ThienHN0910/Template-P](https://github.com/ThienHN0910/Template-P).
-6. Fill in the Pull Request template describing the changes made and tests performed.
-
-Thank you for helping build a better fullstack developer experience for everyone! ❤️
+See [SECURITY.md](SECURITY.md) for private vulnerability reporting and [SUPPORT.md](SUPPORT.md) for community support.

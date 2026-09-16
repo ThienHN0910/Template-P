@@ -6,8 +6,11 @@
   "type": "module",
   "scripts": {
     "build": "pnpm --filter ./packages/cli build",
+    "check:content": "node ./scripts/check-first-party-content.mjs",
     "typecheck": "pnpm --filter ./packages/cli typecheck",
-    "test": "pnpm --filter ./packages/cli test",
+    "test:content": "node --test ./scripts/content-policy.test.mjs",
+    "test": "pnpm test:content && pnpm --filter ./packages/cli test",
+    "verify": "pnpm check:content && pnpm typecheck && pnpm test && pnpm build",
     "dev": "pnpm --filter ./packages/cli dev",
     "create": "node ./packages/cli/bin/create-p-stack.js",
     "init": "node ./scripts/init.js",

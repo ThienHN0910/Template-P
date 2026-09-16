@@ -1,21 +1,27 @@
-## Description
+## Summary
 
-Briefly describe the change and the rationale behind it. Include relevant issue numbers if applicable.
+Describe the user-facing change and why it is needed.
 
-Fixes #(issue)
+## Linked issue or decision
 
-## Type of Change
+Link the issue, decision record, or approved design that authorizes this change.
 
-- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
-- [ ] ✨ New feature or blueprint (non-breaking change which adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 📝 Documentation update
-- [ ] 🎨 Code style or refactoring
+## Generated-output impact
+
+State whether generated projects, manifests, lockfiles, or CLI output change. Identify affected stacks and migration considerations.
+
+## Verification evidence
+
+List the commands run and their results. Include generated-project or integration evidence when relevant.
+
+## Security and compatibility review
+
+Describe secret handling, dependency and supply-chain impact, runtime compatibility, breaking changes, and mitigations.
 
 ## Checklist
 
-- [ ] My code follows the code style and guidelines of this project
-- [ ] I have verified changes locally using `pnpm build` with zero errors
-- [ ] I have tested scaffolding end-to-end (`node ./packages/cli/bin/create-template.js ...`)
-- [ ] No sensitive credentials, private keys, or API keys are committed
-- [ ] Relevant documentation has been updated
+- [ ] I ran the applicable typecheck, tests, and build successfully.
+- [ ] When this changes CLI output, I tested the packed artifact against the affected generated project.
+- [ ] I updated relevant documentation, support status, and migration guidance.
+- [ ] This change contains no secrets, credentials, tokens, or private URLs.
+- [ ] I explicitly identified every verified or experimental support change.

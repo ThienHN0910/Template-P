@@ -1,28 +1,29 @@
 # AGENTS.md
 
-Welcome AI agents and developers. This file defines operating rules, agent configurations, and domain guidelines for `template-p` (the Universal Fullstack Template & CLI Engine).
+Welcome, AI agents and developers. This file defines operating rules, agent configurations, and domain guidance for `template-p`, the Universal Fullstack Template and CLI Engine.
 
 ## Agent skills
 
 ### Issue tracker
 
-Local markdown files in `.scratch/`. See [`docs/agents/issue-tracker.md`](file:///E:/workspace/srcPrj/template-p/docs/agents/issue-tracker.md).
+Local Markdown files in `.scratch/` are the issue tracker. See [docs/agents/issue-tracker.md](docs/agents/issue-tracker.md).
 
 ### Triage labels
 
-Canonical 5 triage labels (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See [`docs/agents/triage-labels.md`](file:///E:/workspace/srcPrj/template-p/docs/agents/triage-labels.md).
+The canonical five triage labels are `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, and `wontfix`. See [docs/agents/triage-labels.md](docs/agents/triage-labels.md).
 
-### Domain docs
+### Domain documentation
 
-Single-context documentation layout. See [`docs/agents/domain.md`](file:///E:/workspace/srcPrj/template-p/docs/agents/domain.md).
+The repository uses a single-context documentation layout. See [docs/agents/domain.md](docs/agents/domain.md).
 
----
+## Project overview
 
-## Project Overview
+`template-p` is a CLI scaffolder and source repository for `@thienhn/create-template`.
 
-`template-p` là bộ công cụ CLI Scaffolder và GitHub Template đa năng:
-1. Cho phép chạy lệnh `npx` (ví dụ `npx create-p-stack`) để khởi tạo dự án Fullstack bằng giao diện tương tác (interactive terminal).
-2. Hỗ trợ chọn Backend (.NET, Node.js, FastAPI), Kiến trúc (Clean Architecture / DDD, MVC, Blank).
-3. Kiểm tra tự động môi trường (`dotnet`, `node`, `python`), hỏi cài đặt nếu thiếu qua package manager của hệ điều hành.
-4. Hỗ trợ chọn Frontend (Vue 3, React, Next.js, Nuxt 3) với tùy chọn Theme (Dark/Light), CSS (SCSS/Tailwind), đa ngôn ngữ (i18n).
-5. Tự động đóng gói bộ Agent Skills (Matt Pocock skills, Taste skills, Ponytail) và MCP Servers vào dự án mới sinh ra.
+1. It provides an interactive `npx` command, such as `npx @thienhn/create-template`, for creating full-stack projects.
+2. Current v2 selections include .NET, Node.js, and FastAPI backends, plus Clean Architecture/DDD, MVC, and blank or modular architecture choices where supported.
+3. It performs environment checks for `dotnet`, `node`, and `python`, and can provide runtime-installation guidance through an operating-system package manager when a runtime is missing.
+4. It offers Vue 3, React, Next.js, and Nuxt 3 frontends with current v2 feature options such as dark/light themes, SCSS or Tailwind where applicable, and i18n.
+5. It can include optional AI-agent skills and MCP configuration in a scaffolded project.
+
+The [v3 capability architecture](docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md) is approved planned work, not currently shipped v2 behavior.
