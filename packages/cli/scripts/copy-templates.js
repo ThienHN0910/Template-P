@@ -11,7 +11,7 @@ async function syncTemplates() {
   if (fs.existsSync(sourceTemplates)) {
     await fsp.mkdir(destTemplates, { recursive: true });
     await fsp.cp(sourceTemplates, destTemplates, { recursive: true });
-    console.log('✓ Synced templates into packages/cli/templates for npm packaging.');
+    console.log('Synced templates into packages/cli/templates for npm packaging.');
   }
 }
 

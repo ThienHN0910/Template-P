@@ -1,14 +1,34 @@
 import assert from 'node:assert/strict';
+import { execFile as execFileCallback } from 'node:child_process';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { promisify } from 'node:util';
 import test from 'node:test';
 import { inspectText, scanPolicy } from './content-policy.mjs';
+
+const execFile = promisify(execFileCallback);
 
 test('reports mojibake in every first-party text file', () => {
   const mojibake = `Ready ${'\u00e2\u0153\u201c'}`;
   const violations = inspectText('README.md', mojibake, { allowVietnamese: false });
   assert.deepEqual(violations.map(({ rule }) => rule), ['mojibake']);
+});
+
+test('reports the common corrupted em-dash sequence', () => {
+  const violations = inspectText('README.md', `Ready ${'\u00e2\u20ac\u201d'}`, { allowVietnamese: false });
+
+  assert.deepEqual(violations.map(({ rule }) => rule), ['mojibake']);
+});
+
+test('normalizes NFD Vietnamese before applying the English-only check', () => {
+  const vietnamese = 'Th\u00e0nh ph\u1ed1'.normalize('NFD');
+
+  assert.deepEqual(
+    inspectText('README.md', vietnamese, { allowVietnamese: false }).map(({ rule }) => rule),
+    ['english-only'],
+  );
+  assert.deepEqual(inspectText('src/locales/vi.ts', vietnamese, { allowVietnamese: true }), []);
 });
 
 test('allows Vietnamese only in an explicit locale resource', () => {
@@ -103,4 +123,46 @@ test('repository scripts enforce the first-party content policy before verificat
   assert.equal(packageManifest.scripts['test:content'], 'node --test ./scripts/content-policy.test.mjs');
   assert.equal(packageManifest.scripts.test, 'pnpm test:content && pnpm --filter ./packages/cli test');
   assert.equal(packageManifest.scripts.verify, 'pnpm check:content && pnpm typecheck && pnpm test && pnpm build');
+});
+
+test('first-party content policy covers every tracked text file outside documented exclusions', async () => {
+  const root = path.resolve(import.meta.dirname, '..');
+  const { stdout } = await execFile(
+    'git',
+    ['-c', 'safe.directory=*', 'ls-files', '-z', '--cached'],
+    { cwd: root },
+  );
+  const trackedFiles = stdout.split('\0').filter(Boolean);
+  const excludedPrefixes = ['.scratch/', '.superpowers/', 'docs/superpowers/plans/', 'templates/skills/'];
+  const excludedFiles = new Set(['pnpm-lock.yaml']);
+  const expectedFiles = [];
+
+  for (const file of trackedFiles) {
+    if (excludedFiles.has(file) || excludedPrefixes.some((prefix) => file.startsWith(prefix))) continue;
+    const bytes = await readFile(path.join(root, file));
+    if (!bytes.includes(0)) expectedFiles.push(file);
+  }
+
+  const { FIRST_PARTY_CONTENT_POLICY } = await import('./first-party-content-policy.mjs');
+  const { collectPolicyFiles } = await import('./content-policy.mjs');
+  const coveredFiles = await collectPolicyFiles({ root, ...FIRST_PARTY_CONTENT_POLICY });
+
+  assert.deepEqual(coveredFiles, expectedFiles.sort());
+});
+
+test('package README uses npm-safe absolute links to repository resources', async () => {
+  const root = path.resolve(import.meta.dirname, '..');
+  const readme = await readFile(path.join(root, 'packages/cli/README.md'), 'utf8');
+
+  assert.doesNotMatch(readme, /\]\(\.\.\/\.\.\//u);
+  for (const resource of [
+    '.github/workflows/scaffold-matrix.yml',
+    'docs/reference/compatibility.md',
+    'docs/reference/commands.md',
+    'docs/README.md',
+    'docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md',
+    'LICENSE',
+  ]) {
+    assert.match(readme, new RegExp(`https://github\\.com/ThienHN0910/Template-P/blob/main/${resource.replaceAll('.', '\\.')}`, 'u'));
+  }
 });

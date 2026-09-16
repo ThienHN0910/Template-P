@@ -2,7 +2,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const MOJIBAKE_MARKERS = [
-  '\u00e2\u0153', '\u00e2\u0161', '\u00e2\u2020', '\u00f0\u0178',
+  '\u00e2\u0153', '\u00e2\u0161', '\u00e2\u2020', '\u00e2\u20ac\u201d', '\u00f0\u0178',
   'Ti\u00e1\u00ba', 'D\u00e1\u00bb', '\u00c4\u2018', '\u00c6\u00b0',
   '\u00c3', '\u00c2\u00a9', '\uFFFD',
 ];
@@ -11,12 +11,13 @@ const TEXT_EXTENSIONS = new Set([
   '.cjs', '.cs', '.csproj', '.css', '.html', '.js', '.json', '.jsx', '.md', '.mjs',
   '.py', '.scss', '.sln', '.toml', '.ts', '.tsx', '.txt', '.vue', '.xml', '.yaml', '.yml',
 ]);
-const TEXT_FILENAMES = new Set(['.env.example', '.gitignore', 'Dockerfile', 'LICENSE']);
+const TEXT_FILENAMES = new Set(['.env.example', '.gitignore', 'CODEOWNERS', 'Dockerfile', 'LICENSE']);
 
 export function inspectText(file, text, { allowVietnamese = false } = {}) {
+  const normalizedText = text.normalize('NFC');
   const violations = [];
-  if (MOJIBAKE_MARKERS.some((marker) => text.includes(marker))) violations.push({ file, rule: 'mojibake' });
-  if (!allowVietnamese && VIETNAMESE_PATTERN.test(text)) violations.push({ file, rule: 'english-only' });
+  if (MOJIBAKE_MARKERS.some((marker) => normalizedText.includes(marker))) violations.push({ file, rule: 'mojibake' });
+  if (!allowVietnamese && VIETNAMESE_PATTERN.test(normalizedText)) violations.push({ file, rule: 'english-only' });
   return violations;
 }
 
@@ -43,7 +44,7 @@ async function collect(root, relativePath, excludePrefixes, output) {
   }
 }
 
-export async function scanPolicy({ root, roots, excludePrefixes = [], vietnameseLocaleFiles = [] }) {
+export async function collectPolicyFiles({ root, roots, excludePrefixes = [] }) {
   const files = [];
   for (const rootPath of roots) {
     const absolutePath = path.join(root, rootPath);
@@ -56,9 +57,14 @@ export async function scanPolicy({ root, roots, excludePrefixes = [], vietnamese
     else files.push(normalize(rootPath));
   }
 
+  return [...new Set(files)].sort();
+}
+
+export async function scanPolicy({ root, roots, excludePrefixes = [], vietnameseLocaleFiles = [] }) {
+  const files = await collectPolicyFiles({ root, roots, excludePrefixes });
   const localeSet = new Set(vietnameseLocaleFiles);
   const violations = [];
-  for (const file of [...new Set(files)].sort()) {
+  for (const file of files) {
     const text = await readFile(path.join(root, file), 'utf8');
     violations.push(...inspectText(file, text, { allowVietnamese: localeSet.has(file) }));
   }

@@ -20,9 +20,9 @@ Bundled blueprints are always available. Upstream frontend generators and dynami
 
 ## Verified compatibility
 
-Full scaffold, install, and build CI evidence is limited to the combinations named in [`scaffold-matrix.yml`](../../.github/workflows/scaffold-matrix.yml): Node.js blank with npm, .NET blank with pnpm, and FastAPI blank with npm. Other selectable combinations are offered but are not production-verified by that matrix.
+Full scaffold, install, and build CI evidence is limited to the combinations named in [`scaffold-matrix.yml`](https://github.com/ThienHN0910/Template-P/blob/main/.github/workflows/scaffold-matrix.yml): Node.js blank with npm, .NET blank with pnpm, and FastAPI blank with npm. Other selectable combinations are offered but are not production-verified by that matrix.
 
-Read the [current v2 compatibility contract](../../docs/reference/compatibility.md) for the complete evidence and stability boundary.
+Read the [current v2 compatibility contract](https://github.com/ThienHN0910/Template-P/blob/main/docs/reference/compatibility.md) for the complete evidence and stability boundary.
 
 ## Interactive usage
 
@@ -44,7 +44,7 @@ npx @thienhn/create-template my-app \
   --yes
 ```
 
-The [command reference](../../docs/reference/commands.md) documents the exact current v2 flags.
+The [command reference](https://github.com/ThienHN0910/Template-P/blob/main/docs/reference/commands.md) documents the exact current v2 flags.
 
 ## Trust and network boundaries
 
@@ -58,12 +58,12 @@ Remote integrations can change independently of this package. Review generated t
 
 ## Documentation
 
-The [repository documentation index](../../docs/README.md) includes installation, automation, command, and compatibility guides.
+The [repository documentation index](https://github.com/ThienHN0910/Template-P/blob/main/docs/README.md) includes installation, automation, command, and compatibility guides.
 
 ## v3 roadmap
 
-The [approved v3 capability architecture](../../docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md) describes planned work. It is not shipped v2 behavior.
+The [approved v3 capability architecture](https://github.com/ThienHN0910/Template-P/blob/main/docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md) describes planned work. It is not shipped v2 behavior.
 
 ## License
 
-[MIT](../../LICENSE) © 2026 ThienHN0910.
+[MIT](https://github.com/ThienHN0910/Template-P/blob/main/LICENSE) © 2026 ThienHN0910.
