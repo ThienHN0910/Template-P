@@ -5,6 +5,21 @@ semantic versioning for the published CLI.
 
 ## Unreleased
 
+### Added
+
+- Added automated first-party language and encoding checks.
+- Added an English documentation index, current v2 command reference, verification guide, and GitHub maintenance guide.
+
+### Changed
+
+- Standardized first-party repository, CLI, generated default-locale, and GitHub contribution text in professional English.
+- Repositioned the repository as the source for the CLI-first `@thienhn/create-template` package and documented the approved v3 architecture separately from shipped v2 behavior.
+- Disabled the engine repository's GitHub Template and Wiki features, enabled merged-branch cleanup, and added v3 delivery milestones.
+
+### Fixed
+
+- Removed mojibake from terminal messages, documentation, issue forms, and generated Vue localization while preserving valid optional Vietnamese translations.
+
 ## 2.0.1 - 2026-09-15
 
 ### Fixed
