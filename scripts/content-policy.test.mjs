@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -68,4 +68,29 @@ test('public documentation is English-only and free of mojibake', async () => {
     vietnameseLocaleFiles: [],
   });
   assert.deepEqual(violations, []);
+});
+
+test('GitHub contribution surfaces are English and UTF-8 clean', async () => {
+  const root = path.resolve(import.meta.dirname, '..');
+  const violations = await scanPolicy({
+    root,
+    roots: ['.github'],
+    excludePrefixes: [],
+    vietnameseLocaleFiles: [],
+  });
+  assert.deepEqual(violations, []);
+});
+
+test('GitHub issue and pull-request titles use plain English without emoji', async () => {
+  const root = path.resolve(import.meta.dirname, '..');
+  const contributionFiles = [
+    '.github/ISSUE_TEMPLATE/bug_report.yml',
+    '.github/ISSUE_TEMPLATE/feature_request.yml',
+    '.github/PULL_REQUEST_TEMPLATE.md',
+  ];
+  const contents = await Promise.all(
+    contributionFiles.map((file) => readFile(path.join(root, file), 'utf8')),
+  );
+
+  for (const content of contents) assert.doesNotMatch(content, /\p{Extended_Pictographic}/u);
 });

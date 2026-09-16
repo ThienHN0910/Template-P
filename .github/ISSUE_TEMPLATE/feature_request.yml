@@ -1,30 +1,51 @@
-name: 💡 Feature Request / New Blueprint
-description: Suggest an idea or propose a new backend/frontend blueprint
+name: Feature request
+description: Propose a capability with a clear user need and verification plan.
 title: "[Feature]: "
 labels: ["needs-triage", "enhancement"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Have an idea to make @thienhn/create-template even better? Tell us about it!
   - type: textarea
     id: problem
     attributes:
-      label: Problem or Motivation
-      description: Is your feature request related to a problem or a new technology?
-      placeholder: I'm always frustrated when... / It would be awesome if create-template supported...
+      label: Problem and target user
+      description: Explain the user problem, who experiences it, and why the current CLI cannot meet the need.
     validations:
       required: true
   - type: textarea
-    id: solution
+    id: behavior
     attributes:
-      label: Proposed Solution / Architecture
-      description: Describe the solution you'd like or how the blueprint should look.
-      placeholder: Add support for Go (Fiber/Gin) / SvelteKit / GraphQL...
+      label: Proposed user-visible behavior
+      description: Describe what a user can select, run, or observe after this capability is available.
+    validations:
+      required: true
+  - type: textarea
+    id: capability
+    attributes:
+      label: Affected runtime, framework, database, or frontend capability
+      description: Name the backend runtime, framework, database, frontend, or other capability this request affects.
     validations:
       required: true
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives Considered
-      description: Any alternative solutions or features you've considered.
+      label: Alternatives considered
+      description: Describe other approaches, existing tools, or why the current options are insufficient.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification evidence needed for a verified support claim
+      description: Specify the documentation, generated-project checks, tests, or compatibility evidence required before calling this capability verified.
+    validations:
+      required: true
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Willingness to contribute or maintain the capability
+      description: Tell maintainers whether you can help implement, test, document, or maintain this capability.
+      options:
+        - I can contribute implementation, tests, or documentation.
+        - I can help test and maintain the capability.
+        - I cannot contribute, but can provide feedback and verification evidence.
+    validations:
+      required: true
