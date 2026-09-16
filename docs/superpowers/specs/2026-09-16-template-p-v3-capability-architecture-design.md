@@ -116,7 +116,7 @@ interface StackConfiguration {
   backend: {
     runtime: "dotnet" | "node" | "python";
     framework: string;
-    architecture: "clean" | "modular" | "mvc" | "minimal";
+    architecture: "clean" | "modular" | "mvc" | "minimal" | "blank";
   };
   persistence: {
     database:
@@ -129,8 +129,8 @@ interface StackConfiguration {
     adapter?: string;
   };
   frontend: {
-    framework: "vue" | "react" | "next" | "nuxt";
-    rendering: "spa" | "ssr" | "hybrid";
+    framework: "vue" | "react" | "next" | "nuxt" | "none";
+    rendering: "spa" | "ssr" | "hybrid" | "none";
     styling: string;
     features: string[];
   };
@@ -145,6 +145,8 @@ interface StackConfiguration {
 ```
 
 Framework and architecture are separate values. Composite identifiers such as `express-ddd` are deprecated in favor of explicit configuration.
+
+`architecture: "blank"` is an explicit project mode, not an alias for another architecture. It omits the reference domain and persistence integration and therefore requires `database: "none"`. `frontend.framework: "none"` is a first-class API-only selection. API-only projects omit `apps/frontend` and, unless a standalone client capability is selected, `packages/api-client`; their root scripts contain backend and infrastructure operations only.
 
 Configuration precedence is:
 
@@ -178,6 +180,7 @@ interface CapabilityDefinition {
   requires: Constraint[];
   conflicts: Constraint[];
   runtimeRequirements: RuntimeRequirement[];
+  hostRequirements: HostRequirement[];
   dependencies: DependencyDeclaration[];
   layers: TemplateLayer[];
   operations: LifecycleOperation[];
@@ -199,6 +202,8 @@ feature/observability/opentelemetry
 
 Dependency patch versions are not encoded in capability IDs. They belong to versioned capability metadata, allowing a provider patch update without renaming the public capability.
 
+`hostRequirements` can constrain operating system, CPU architecture, required native tools, container availability, and local-service support. For example, the local SQL Server Linux container capability supports x86-64 hosts, not arm64. On an unsupported host, planning must either select an explicitly configured external SQL Server connection and omit the local container or fail before writing files with actionable guidance. It must not rely silently on emulation.
+
 Presets contain configuration only. They do not own separate source templates. A manifest records the exact preset version used so existing projects do not silently inherit future preset changes.
 
 ## Resolution and planning
@@ -210,12 +215,14 @@ The resolver performs these steps without writing files:
 3. Select documented default adapters for unspecified choices.
 4. Collect `requires`, `provides`, and `conflicts` constraints.
 5. Validate runtime and dependency version requirements.
-6. Determine the lowest support tier in the resolved stack.
+6. Determine the effective support tier of the resolved stack.
 7. Build a topologically ordered dependency graph.
 8. Detect cycles and file-ownership conflicts.
 9. Produce an execution plan.
 
 The resolver must not silently replace an explicitly selected adapter. It should report why a combination is unavailable and list verified alternatives.
+
+Support-tier precedence is `deprecated`, then `experimental`, then `verified`: a stack containing any deprecated capability is reported as deprecated; otherwise any experimental capability makes the stack experimental. Only an all-verified graph is reported as verified.
 
 The execution plan includes:
 
@@ -327,6 +334,18 @@ Running without an explicit subcommand remains compatible with `create`. The v3.
 
 `doctor` is read-only. `diff` previews managed changes. `add` and `upgrade` use versioned lifecycle migrations and never silently overwrite modified files. Database engine changes produce a migration plan and guidance, not automatic production data transfer.
 
+### Manifest reproduction contract
+
+Exact reproduction uses the generator version recorded in the manifest:
+
+```text
+npx @thienhn/create-template@<generatorVersion> create --from-manifest <file>
+```
+
+Published npm versions are the retention mechanism for their bundled template layers; a newer installed CLI is not required to retain every historical layer. The manifest records the generator version and a digest of the resolved bundled layers. The selected package verifies that digest before generation.
+
+Offline reproduction requires that exact npm package tarball and all required dependency artifacts to be present in the configured local cache. The CLI does not silently substitute newer layers. If the recorded package or layer artifact is unavailable, it exits with a stable reproduction error and explains how to supply a local tarball or explicitly plan an upgrade. Reproduction guarantees template structure and normalized configuration, not byte-for-byte dependency installation when external registries or community plugins are unavailable.
+
 ## CLI experience
 
 Interactive mode starts with recommended presets and offers a custom mode. A preset is a versioned configuration, not a separate template tree.
@@ -345,6 +364,8 @@ The CLI supports:
 
 Runtime installation is opt-in. Preflight checks otherwise report missing tools and installation guidance. AI skills, MCP, and dynamically fetched integrations are also opt-in. Dynamic sources must show their package, source, and version before execution.
 
+Composer and file operations never write outside the project or their internal temporary directory. `--install-missing` is a separate, plan-visible system operation that may invoke an operating-system package manager outside the project only after explicit interactive confirmation. It is disabled in `--no-input` and CI modes, never runs as a hidden composition hook, and reports when elevated privileges are required.
+
 Errors have stable identifiers, a human-readable cause, and a suggested remediation. Representative identifiers include:
 
 ```text
@@ -354,6 +375,32 @@ TP_CAPABILITY_CYCLE
 TP_MANAGED_FILE_MODIFIED
 ```
 
+### v2 to v3 compatibility
+
+Legacy flags remain accepted throughout the v3 major line and are removed no earlier than v4. Each use emits an English migration hint unless machine-readable output suppresses prose in favor of a structured deprecation event.
+
+| v2 input | v3 mapping |
+| --- | --- |
+| Positional project name | Retained unchanged |
+| `--backend dotnet` | `runtime=dotnet`, `framework=aspnet-core` |
+| `--backend node` | `runtime=node`; framework is derived from legacy `--arch` |
+| `--backend fastapi` | `runtime=python`, `framework=fastapi` |
+| `--arch webapi-ddd` | `architecture=clean` |
+| `--arch webapi-mvc` | `architecture=mvc` |
+| `--arch express-ddd` | `framework=express`, `architecture=clean` |
+| `--arch fastify-clean` | `framework=fastify`, `architecture=clean` |
+| `--arch modular` | `architecture=modular` |
+| `--arch blank` | Runtime-appropriate blank profile |
+| `--frontend vue3/react/nextjs/nuxt3` | Corresponding v3 frontend capability |
+| `--database` or `--db` | Corresponding normalized database; `postgres` maps to `postgresql` |
+| `--package-manager` or `--pm` | Retained package-manager selection |
+| `--offline` | Alias for v3 network-deny mode; only bundled/cached artifacts may be used |
+| `--no-ai` | Retained; AI is already opt-in in v3 |
+| `--yes` | Skip confirmation only; it no longer conceals unresolved required choices |
+| Interactive IDE choices | Optional `tooling/ide/*` capabilities; no editor is required by default |
+
+When only legacy flags are supplied, the compatibility layer fills the documented legacy selection defaults needed to produce a complete v3 configuration and reports the normalized result before writing. It never bypasses new compatibility or host checks. The config and manifest schemas themselves do not persist legacy composite IDs.
+
 ## Generated-project contract
 
 Verified projects share this high-level structure:
@@ -362,9 +409,9 @@ Verified projects share this high-level structure:
 project/
 |- apps/
 |  |- backend/
-|  `- frontend/
+|  `- frontend/              # omitted for frontend/none
 |- packages/
-|  `- api-client/
+|  `- api-client/            # omitted unless a frontend or client capability is selected
 |- infra/
 |  `- compose.yaml
 |- docs/
@@ -393,13 +440,15 @@ infra:up
 infra:down
 ```
 
+Only applicable scripts are emitted. Blank/no-database projects omit database commands, and API-only projects omit frontend build and synchronization commands unless a standalone API-client capability is selected.
+
 Non-blank backends separate HTTP/API, application use cases, domain logic, and persistence adapters in an ecosystem-appropriate way. They are not forced into identical folder structures. Controllers and routes do not access the database directly.
 
-Blank templates retain safe configuration, error, health, and shutdown behavior but omit the reference domain.
+Blank templates retain safe configuration, error, health, and shutdown behavior but omit the reference domain and persistence adapter. They require `database: "none"` in v3.0.
 
 ## Reference vertical slice
 
-Verified non-blank projects include a removable `Catalog/Product` example with create, retrieve, list, update, and delete endpoints under `/api/v1/products`.
+Verified non-blank projects with a selected database include a removable `Catalog/Product` example with create, retrieve, list, update, and delete endpoints under `/api/v1/products`.
 
 The slice includes:
 
@@ -414,6 +463,8 @@ The slice includes:
 - OpenAPI output
 
 The persistence port protects application logic from direct ORM or driver coupling without pretending database-specific capabilities do not exist. Applications may use native database features inside the selected adapter.
+
+`database: "none"` projects do not generate Product CRUD, persistence ports, migrations, seed commands, or database health checks. In v3.0, this selection is valid only for blank backends. Template-P does not present an ephemeral in-memory store as a production persistence adapter.
 
 ## Database and adapter model
 
@@ -430,19 +481,58 @@ The initial database catalog is:
 
 MariaDB is not treated as automatically identical to MySQL. It may become a separate verified option after dedicated compatibility testing.
 
-The initial adapter policy is:
+### Normative v3.0 backend profiles
 
-| Runtime | Database | Default adapter | Optional adapter |
+The following profile and adapter tables define the minimum stable v3.0 matrix. The stable release cannot reduce this matrix merely by omitting combinations from marketing material.
+
+| Profile ID | Runtime | Framework | Architecture | Allowed database set | v3.0 tier | Required verification |
+| --- | --- | --- | --- | --- | --- | --- |
+| `dotnet-aspnet-clean` | .NET 10 | ASP.NET Core | Clean | All five databases | Verified | Levels 1-4 |
+| `dotnet-aspnet-mvc` | .NET 10 | ASP.NET Core | MVC | All five databases | Verified | Levels 1-4 |
+| `dotnet-aspnet-blank` | .NET 10 | ASP.NET Core | Blank | None only | Verified | Levels 1-3 |
+| `node-express-clean` | Node.js 24 | Express | Clean | All five databases | Verified | Levels 1-4 |
+| `node-fastify-clean` | Node.js 24 | Fastify | Clean | All five databases | Verified | Levels 1-4 |
+| `node-http-blank` | Node.js 24 | Native HTTP | Blank | None only | Verified | Levels 1-3 |
+| `python-fastapi-modular` | Python 3.13 | FastAPI | Modular | All five databases | Verified | Levels 1-4 |
+| `python-fastapi-blank` | Python 3.13 | FastAPI | Blank | None only | Verified | Levels 1-3 |
+
+"All five databases" means PostgreSQL, SQL Server, MySQL, SQLite, and MongoDB. Each non-blank profile must scaffold, build, and pass the persistence contract with every database in that set using the runtime-specific default adapter below.
+
+### Normative v3.0 default adapters
+
+| Runtime | Database | Default adapter and driver | Additional host requirement |
 | --- | --- | --- | --- |
-| .NET 10 | PostgreSQL | EF Core 10 + Npgsql | None initially |
-| .NET 10 | SQL Server | EF Core 10 + Microsoft provider | None initially |
-| .NET 10 | SQLite | EF Core 10 + Microsoft provider | None initially |
-| .NET 10 | MySQL | EF Core + Oracle provider | Pomelo after stable EF Core 10 support |
-| .NET 10 | MongoDB | Official MongoDB driver | None initially |
-| Node.js | PostgreSQL, MySQL, SQL Server, SQLite | Prisma 7 | TypeORM 1; stable Drizzle where supported |
-| Node.js | MongoDB | Official MongoDB driver | Mongoose 9 |
-| FastAPI | Relational databases | SQLAlchemy 2.0 + Alembic | Database-specific driver choice |
-| FastAPI | MongoDB | Async PyMongo | Beanie 2 |
+| .NET 10 | PostgreSQL | EF Core 10 + Npgsql | PostgreSQL service or external connection |
+| .NET 10 | SQL Server | EF Core 10 + Microsoft SQL Server provider | x86-64 for the local Linux container, or external SQL Server |
+| .NET 10 | MySQL | EF Core 10 + Oracle `MySql.EntityFrameworkCore` | MySQL service or external connection; license notice required |
+| .NET 10 | SQLite | EF Core 10 + Microsoft SQLite provider | Local filesystem access |
+| .NET 10 | MongoDB | Official MongoDB C# driver | MongoDB service or external connection |
+| Node.js 24 | PostgreSQL | Prisma 7 + PostgreSQL driver adapter | PostgreSQL service or external connection |
+| Node.js 24 | SQL Server | Prisma 7 + SQL Server driver adapter | x86-64 for the local Linux container, or external SQL Server |
+| Node.js 24 | MySQL | Prisma 7 + MySQL driver adapter | MySQL service or external connection |
+| Node.js 24 | SQLite | Prisma 7 + SQLite driver adapter | Local filesystem access |
+| Node.js 24 | MongoDB | Official MongoDB Node.js driver | MongoDB service or external connection |
+| Python 3.13 | PostgreSQL | SQLAlchemy 2.0 async session + psycopg 3 + Alembic | PostgreSQL service or external connection |
+| Python 3.13 | SQL Server | SQLAlchemy 2.0 async session + aioodbc/pyodbc + Alembic | Microsoft ODBC Driver 18; x86-64 for local container or external SQL Server |
+| Python 3.13 | MySQL | SQLAlchemy 2.0 async session + asyncmy + Alembic | MySQL service or external connection |
+| Python 3.13 | SQLite | SQLAlchemy 2.0 async session + aiosqlite + Alembic | Local filesystem access |
+| Python 3.13 | MongoDB | PyMongo `AsyncMongoClient` | MongoDB service or external connection |
+
+The FastAPI contract uses an async application-facing session consistently. Documentation must state that `aioodbc` and `aiosqlite` provide async APIs over thread-backed drivers rather than native non-blocking database I/O. Alembic uses its async-engine template and `run_sync` bridge.
+
+Alternative adapters are not v3.0 acceptance dependencies. TypeORM 1, stable Drizzle where supported, Mongoose 9, and Beanie 2 may appear as experimental choices only after their own Level 1-4 contracts pass. Pomelo becomes eligible after a stable EF Core 10-compatible release. Drizzle SQL Server remains hidden behind `--experimental` while it requires a release-candidate line.
+
+### Normative v3.0 frontend contracts
+
+| Frontend ID | Rendering | v3.0 tier | Required verification |
+| --- | --- | --- | --- |
+| `frontend/vue/vite` | SPA | Verified | Levels 1-3 plus canonical OpenAPI client contract |
+| `frontend/react/vite` | SPA | Verified | Levels 1-3 plus canonical OpenAPI client contract |
+| `frontend/next` | Hybrid | Verified | Levels 1-3 plus server/browser configuration contract |
+| `frontend/nuxt` | Hybrid | Verified | Levels 1-3 plus server/browser configuration contract |
+| `frontend/none` | None | Verified | Config, scripts, and directory-omission contract |
+
+Frontends are verified independently against the canonical OpenAPI contract. They are not multiplied across every persistence adapter. Named presets provide Level 5 evidence that representative frontend and backend boundaries work together.
 
 Research-informed constraints as of the design date include:
 
@@ -456,12 +546,26 @@ Relevant primary references:
 
 - [EF Core providers and releases](https://learn.microsoft.com/en-us/ef/core/what-is-new/)
 - [EF Core multiple-provider migrations](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/providers)
+- [Npgsql EF Core provider](https://www.npgsql.org/efcore/)
+- [Microsoft EF Core SQL Server provider](https://learn.microsoft.com/en-us/ef/core/providers/sql-server/)
+- [Oracle MySQL EF Core package](https://www.nuget.org/packages/MySql.EntityFrameworkCore)
+- [Pomelo compatibility matrix](https://github.com/PomeloFoundation/Pomelo.EntityFrameworkCore.MySql)
+- [MongoDB C# driver releases](https://www.mongodb.com/docs/drivers/csharp/current/reference/release-notes/)
+- [Node.js release and end-of-life policy](https://nodejs.org/en/about/eol)
 - [Prisma release status](https://www.prisma.io/docs/orm/release-status)
 - [Prisma migration limitations](https://docs.prisma.io/docs/orm/v7/prisma-migrate/understanding-prisma-migrate/limitations-and-known-issues)
 - [Drizzle SQL Server guide](https://orm.drizzle.team/docs/mssql/get-started-mssql)
 - [TypeORM MongoDB documentation](https://typeorm.io/docs/drivers/mongodb/)
+- [MongoDB Node.js driver releases](https://github.com/mongodb/node-mongodb-native/releases)
+- [Mongoose migration guide](https://mongoosejs.com/docs/migrating_to_9.html)
 - [SQLAlchemy 2.0 documentation](https://docs.sqlalchemy.org/en/20/)
+- [SQLAlchemy PostgreSQL dialect](https://docs.sqlalchemy.org/en/20/dialects/postgresql.html)
+- [SQLAlchemy SQL Server dialect](https://docs.sqlalchemy.org/en/20/dialects/mssql.html)
+- [SQLAlchemy MySQL dialect](https://docs.sqlalchemy.org/en/20/dialects/mysql.html)
+- [SQLAlchemy SQLite dialect](https://docs.sqlalchemy.org/en/20/dialects/sqlite.html)
 - [MongoDB Python async migration guidance](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/reference/migration/)
+- [Beanie project metadata](https://github.com/BeanieODM/beanie/blob/main/pyproject.toml)
+- [SQL Server Linux container requirements](https://learn.microsoft.com/en-us/sql/linux/sql-server-linux-docker-container-deployment)
 
 The default runtime baseline is .NET 10 LTS, Node.js 24.11+ LTS, and Python 3.13. Runtime versions and exact dependency patches remain registry data and must be reviewed during implementation.
 
@@ -476,7 +580,9 @@ Relational adapters generate provider-specific migrations and expose explicit de
 
 MongoDB official-driver templates include an application-owned, versioned, idempotent migration runner, a `schema_migrations` collection, explicit index initialization, migration locking, status reporting, and seed commands. ODM-specific migration mechanisms may replace this runner when they satisfy the same verification contract.
 
-## Production baseline and optional capabilities
+The experimental Beanie adapter uses Beanie's native migration mechanism. Because transactional Beanie migrations require a replica set or mongos, its development infrastructure includes an explicit replica-set profile. Documentation and integration tests cover both transaction-enabled operation and the limitations of any non-transactional mode. Mongo migration verification includes concurrent-runner exclusion and stale-lock recovery rather than testing only the happy path.
+
+## Production baseline and deferred optional capabilities
 
 Every non-blank verified backend includes:
 
@@ -491,7 +597,9 @@ Every non-blank verified backend includes:
 - OpenAPI
 - Sensible request limits and security headers
 
-Authentication is opt-in. The first supported model is provider-neutral OIDC/OAuth 2.0 with JWT validation, role or claim authorization, a protected route, and a frontend PKCE flow. Template-P does not invent a cross-runtime password storage system.
+Authentication, OpenTelemetry, caching, and background jobs defined below are the approved v3.1 contract and are not v3.0 acceptance requirements. Structured logging, health checks, Docker, and generated GitHub Actions CI remain v3.0 baseline requirements.
+
+Authentication is opt-in. The first supported model is provider-neutral OIDC/OAuth 2.0 with JWT access-token validation, role or claim authorization, a protected route, and a frontend authorization-code-with-PKCE flow. Providers that issue only opaque access tokens require a separately verified introspection adapter. Template-P does not invent a cross-runtime password storage system.
 
 Structured logging and health checks are baseline features. OpenTelemetry is an opt-in, vendor-neutral capability with development console export, environment-configured OTLP export, and an optional collector Compose profile.
 
@@ -501,7 +609,9 @@ Docker and GitHub Actions CI are baseline generated-project capabilities. Kubern
 
 ## OpenAPI and frontend integration
 
-The backend is the source of truth for the API contract. It generates an OpenAPI document, and `api:sync` updates a checked-in, framework-neutral TypeScript client under `packages/api-client`.
+The backend is the source of truth for the API contract. It generates an OpenAPI document, and `api:sync` updates a checked-in, framework-neutral TypeScript client under `packages/api-client` when a frontend or client capability is selected.
+
+The OpenAPI normalization and client-generator versions are pinned in capability metadata. Normalization removes environment-specific server values and unstable generation metadata, applies deterministic ordering, and validates the result before drift comparison. Docker image references used by verified capabilities follow an explicit registry pinning policy and may not use floating `latest` tags.
 
 CI fails when the backend contract and checked-in client drift. The client handles typed requests and responses, Problem Details, cancellation, environment-aware base URLs, and an optional authentication token callback. It does not own React, Vue, or other state management.
 
@@ -531,7 +641,7 @@ English is the default locale. Vietnamese is generated only when internationaliz
 ### Level 3: scaffold and build
 
 - Pack and invoke the npm artifact rather than the source tree.
-- Scaffold each verified selection path.
+- Scaffold every normative backend profile with every database allowed by that profile and its default adapter.
 - Install or restore dependencies.
 - Lint, typecheck, test, and production-build generated code.
 - Validate manifests and ensure a second composition pass produces no unexpected changes.
@@ -547,6 +657,19 @@ English is the default locale. Vietnamese is generated only when internationaliz
 
 Representative .NET, Node, and FastAPI presets run the complete backend, frontend, and infrastructure path. They verify health, typed-client Product operations, OpenAPI synchronization, frontend production builds, and graceful shutdown.
 
+### Matrix-generation algorithm
+
+CI derives jobs from the registry rather than a handwritten duplicate matrix:
+
+1. For each normative backend profile, generate one Level 3 job for every allowed default database adapter.
+2. For each default adapter, run Level 4 using its real database or file store; blank/none profiles have no Level 4 job.
+3. For each verified frontend, run Level 3 once against the canonical OpenAPI fixture, independent of database choice.
+4. For each verified package manager, run the golden preset and one representative preset per runtime; package-manager jobs do not multiply across all databases.
+5. Run Level 5 only for named representative presets selected to cover every runtime, every frontend family, and every database family across the set.
+6. Run the full Level 1-4 matrix on Ubuntu. Run path/process tests plus one representative preset per runtime on Windows and macOS.
+
+Any capability marked verified must appear in at least one generated job at each verification level required by its contract. CI fails if a verified registry entry has zero coverage or if a handwritten exclusion lacks an expiry date and rationale.
+
 Ubuntu runs the full integration matrix. Windows and macOS run path, process, scaffold, and representative build tests. Package managers have independent support tiers and are advertised as verified only with matching CI evidence.
 
 ## Support tiers
@@ -559,11 +682,13 @@ The public tiers are:
 
 Promotion requires stable schema and API behavior, documentation, license and dependency review, and all required verification levels. Capabilities may be demoted when upstream software reaches end of life, unresolved vulnerabilities remain, scheduled verification repeatedly fails, or runtime compatibility is lost.
 
+Promotion and release require successful evidence from the release candidate commit. Scheduled verification runs at least weekly; the generated compatibility page records the last successful verification date for each default adapter. A stale or repeatedly failing scheduled job opens a triage issue and prevents the next release until the capability is fixed, demoted, or removed from that release's normative matrix.
+
 ## Security model
 
 The repository uses dependency review, static analysis, secret scanning where available, least-privilege GitHub Actions permissions, and immutable action pins for security-sensitive workflows.
 
-The scaffolder validates names and paths, refuses writes outside the target, rejects escaping symlinks, avoids logging secrets, uses argument arrays instead of shell-string construction, and does not silently execute remote code.
+The scaffolder validates names and paths; composer operations refuse writes outside the target or internal temporary directory, reject escaping symlinks, avoid logging secrets, use argument arrays instead of shell-string construction, and do not silently execute remote code. Explicit system-install operations follow the separate policy defined in the CLI experience section.
 
 Generated projects use secure configuration defaults, separate development credentials, avoid wildcard credentialed CORS, hide production stack traces, bound database retries and timeouts, and use non-root production containers when a production Dockerfile is selected.
 
@@ -675,15 +800,16 @@ Later releases add `add` and optional production capabilities in v3.1, conservat
 ## Acceptance criteria for v3.0
 
 - Repository and npm identity remain unchanged.
-- All first-party public content is professional English and UTF-8 clean.
+- All first-party public content passes the path-aware language/encoding checks and a maintainer English editorial review recorded in the release checklist.
 - Configuration no longer encodes framework and architecture in one identifier.
 - Prompts, validation, documentation, and CI consume one capability registry.
 - Presets resolve through the same registry as custom configurations.
 - Planning completes before filesystem mutation and supports `--dry-run`.
 - Generated projects contain a safe manifest without secrets or absolute paths.
-- The five initial database engines have complete default adapters for each advertised verified backend path.
+- Every non-blank profile in the normative v3.0 matrix has a complete default adapter for PostgreSQL, SQL Server, MySQL, SQLite, and MongoDB.
 - Every verified adapter includes configuration, migration or schema evolution, seed, health, Docker where appropriate, CRUD, integration tests, and documentation.
-- Generated non-blank projects expose the shared Product/OpenAPI contract and a synchronized typed frontend client.
+- Generated non-blank projects with a selected database expose the shared Product/OpenAPI contract; projects with a selected frontend also contain a synchronized typed client.
+- Blank/none and API-only selections satisfy their documented omission, directory, and root-script contracts without placeholder persistence code.
 - Verified combinations pass the required scaffold, build, integration, and representative end-to-end checks.
 - Experimental choices are hidden by default and require explicit opt-in.
 - Runtime installation, AI skills, MCP, and remote code execution are opt-in.
