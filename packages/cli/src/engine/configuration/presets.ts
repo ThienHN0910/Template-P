@@ -25,4 +25,28 @@ export const BUILTIN_PRESETS: Record<string, StackConfiguration> = {
     frontend: { framework: 'react', rendering: 'spa', styling: 'tailwind', features: ['theme'] },
     capabilities: {},
   },
+  'dotnet-clean-api': {
+    schemaVersion: 1,
+    project: { name: 'dotnet-clean-api', packageManager: 'pnpm' },
+    backend: { runtime: 'dotnet', framework: 'aspnet-core', architecture: 'clean' },
+    persistence: { database: 'postgresql', adapter: 'data-access/dotnet/ef-core/postgresql' },
+    frontend: { framework: 'none', rendering: 'none', styling: 'none', features: [] },
+    capabilities: {},
+  },
+  'node-express-clean-next': {
+    schemaVersion: 1,
+    project: { name: 'node-express-clean-next', packageManager: 'pnpm' },
+    backend: { runtime: 'node', framework: 'express', architecture: 'clean' },
+    persistence: { database: 'mongodb', adapter: 'data-access/node/mongodb' },
+    frontend: { framework: 'next', rendering: 'hybrid', styling: 'tailwind', features: ['theme'] },
+    capabilities: {},
+  },
+  'fastapi-modular-nuxt': {
+    schemaVersion: 1,
+    project: { name: 'fastapi-modular-nuxt', packageManager: 'pnpm' },
+    backend: { runtime: 'python', framework: 'fastapi', architecture: 'modular' },
+    persistence: { database: 'sqlite', adapter: 'data-access/python/sqlalchemy/sqlite' },
+    frontend: { framework: 'nuxt', rendering: 'hybrid', styling: 'tailwind', features: ['theme'] },
+    capabilities: {},
+  },
 };

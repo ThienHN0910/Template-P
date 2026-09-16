@@ -17,6 +17,9 @@ import { getPythonSqlAlchemyOperations } from './composer/layers/python-sqlalche
 import { getPythonMongoOperations } from './composer/layers/python-mongodb.js';
 import { getOpenApiClientOperations } from './composer/layers/openapi-client.js';
 import { getReactViteOperations } from './composer/layers/react-vite.js';
+import { getVueViteOperations } from './composer/layers/vue-vite.js';
+import { getNextAppOperations } from './composer/layers/next-app.js';
+import { getNuxtAppOperations } from './composer/layers/nuxt-app.js';
 import type { FileOperation } from './composer/operations.js';
 import { applyOperations } from './composer/operations.js';
 import { VirtualFileSystem } from './composer/virtual-fs.js';
@@ -37,6 +40,7 @@ export async function scaffoldStack(config: StackConfiguration, targetDir: strin
       normalizedConfig.project.name,
       normalizedConfig.project.packageManager,
       normalizedConfigWithDb.database,
+      normalizedConfig.frontend.framework,
     ),
   );
 
@@ -84,10 +88,19 @@ export async function scaffoldStack(config: StackConfiguration, targetDir: strin
     }
   }
 
-  // Client
+  // Client & Frontend
   if (resolution.resolvedIds.includes('frontend/react')) {
     operations.push(...getOpenApiClientOperations());
     operations.push(...getReactViteOperations());
+  } else if (resolution.resolvedIds.includes('frontend/vue')) {
+    operations.push(...getOpenApiClientOperations());
+    operations.push(...getVueViteOperations());
+  } else if (resolution.resolvedIds.includes('frontend/next')) {
+    operations.push(...getOpenApiClientOperations());
+    operations.push(...getNextAppOperations());
+  } else if (resolution.resolvedIds.includes('frontend/nuxt')) {
+    operations.push(...getOpenApiClientOperations());
+    operations.push(...getNuxtAppOperations());
   }
 
   // Manifest & Config
