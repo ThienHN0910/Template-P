@@ -44,6 +44,8 @@ export async function run() {
     .option('--db <type>', 'Database alias (postgres, mysql, sqlite, none)')
     .option('-p, --package-manager <pm>', 'Package manager (pnpm, npm, bun)')
     .option('--pm <pm>', 'Package manager shorthand')
+    .option('--dry-run', 'Generate execution plan without writing files to disk', false)
+    .option('--preset <presetName>', 'Use a built-in v3 stack preset')
     .option('--offline', 'Use vendored blueprints and skip remote generator downloads', false)
     .option('--no-ai', 'Skip AI skill and MCP setup')
     .option('-y, --yes', 'Use defaults and skip interactive questionnaire', false)
@@ -51,6 +53,13 @@ export async function run() {
 
   const options = program.opts();
   const rawArgName = program.args[0];
+
+  if (options.dryRun) {
+    const { executeDryRun, formatPlanText } = await import('./engine/index.js');
+    const plan = executeDryRun({ preset: options.preset, name: rawArgName });
+    console.log(formatPlanText(plan));
+    return;
+  }
 
   console.clear();
   p.intro(pc.bgCyan(pc.black(' CREATE-TEMPLATE ')) + pc.bold(' Universal Fullstack & AI Agent Scaffolder'));
