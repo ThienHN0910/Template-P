@@ -12,6 +12,7 @@ export function getDotnetEfSqliteOperations(): FileOperation[] {
     <ProjectReference Include="..\\Application\\Application.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
   </ItemGroup>
 </Project>
 `;
