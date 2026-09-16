@@ -12,9 +12,7 @@
     "test": "pnpm test:content && pnpm --filter ./packages/cli test",
     "verify": "pnpm check:content && pnpm typecheck && pnpm test && pnpm build",
     "dev": "pnpm --filter ./packages/cli dev",
-    "create": "node ./packages/cli/bin/create-p-stack.js",
-    "init": "node ./scripts/init.js",
-    "publish-cli": "cd packages/cli && npm publish --access public"
+    "create": "node ./packages/cli/bin/create-p-stack.js"
   },
   "keywords": [
     "cli",
@@ -28,7 +26,7 @@
     "ai-agent",
     "mcp"
   ],
-  "author": "Antigravity Pair Programmer",
+  "author": "ThienHN0910",
   "license": "MIT",
   "engines": {
     "node": ">=22.13.0"
