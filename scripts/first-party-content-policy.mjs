@@ -5,6 +5,7 @@ export const FIRST_PARTY_CONTENT_POLICY = {
     'packages/cli/README.md', 'packages/cli/bin', 'packages/cli/package.json', 'packages/cli/scripts',
     'packages/cli/src', 'packages/cli/tests', 'packages/cli/tsconfig.json', 'packages/cli/tsup.config.ts',
     'pnpm-workspace.yaml', 'scripts', 'templates/backend', 'templates/frontend', 'templates/mcp',
+    'templates/v3',
   ],
   excludePrefixes: [
     '.scratch',
