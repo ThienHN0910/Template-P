@@ -5,6 +5,8 @@ semantic versioning for the published CLI.
 
 ## Unreleased
 
+## 2.1.0 - 2026-09-16
+
 ### Added
 
 - Added automated first-party language and encoding checks.

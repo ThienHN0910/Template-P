@@ -1,6 +1,6 @@
 {
   "name": "@thienhn/create-template",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Interactive CLI Scaffolder for Universal Fullstack Projects with AI Agent Skills",
   "publishConfig": {
     "access": "public"
