@@ -45,6 +45,32 @@ describe('Presets and Frontend Scaffolder Dispatch', () => {
 
       const appVue = await fsp.readFile(path.join(tmpDir, 'apps/frontend/app.vue'), 'utf8');
       expect(appVue).toContain('@project/api-client');
+
+      const sessionPy = await fsp.readFile(path.join(tmpDir, 'apps/backend/app/db/session.py'), 'utf8');
+      expect(sessionPy).toContain('sqlite+aiosqlite');
+
+      const prismaExists = await fsp.access(path.join(tmpDir, 'apps/backend/prisma')).then(() => true).catch(() => false);
+      expect(prismaExists).toBe(false);
+    } finally {
+      await fsp.rm(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  it('scaffolds React with fastapi-modular-react preset', async () => {
+    const tmpDir = path.resolve('test-output/test-preset-python-react');
+    await fsp.rm(tmpDir, { recursive: true, force: true });
+
+    try {
+      await scaffoldStack(BUILTIN_PRESETS['fastapi-modular-react'], tmpDir);
+
+      const appTsx = await fsp.readFile(path.join(tmpDir, 'apps/frontend/src/App.tsx'), 'utf8');
+      expect(appTsx).toContain('@project/api-client');
+
+      const sessionPy = await fsp.readFile(path.join(tmpDir, 'apps/backend/app/db/session.py'), 'utf8');
+      expect(sessionPy).toContain('postgresql+psycopg');
+
+      const prismaExists = await fsp.access(path.join(tmpDir, 'apps/backend/prisma')).then(() => true).catch(() => false);
+      expect(prismaExists).toBe(false);
     } finally {
       await fsp.rm(tmpDir, { recursive: true, force: true });
     }

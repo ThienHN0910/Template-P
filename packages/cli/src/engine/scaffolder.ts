@@ -50,7 +50,7 @@ export async function scaffoldStack(config: StackConfiguration, targetDir: strin
   }
 
   // Database / Data Access Layer Dispatch
-  if (resolution.resolvedIds.includes('runtime/dotnet')) {
+  if (normalizedConfig.backend.runtime === 'dotnet') {
     if (resolution.resolvedIds.includes('database/postgresql')) {
       operations.push(...getDotnetEfPostgresqlOperations());
     } else if (resolution.resolvedIds.includes('database/sqlserver')) {
@@ -62,7 +62,7 @@ export async function scaffoldStack(config: StackConfiguration, targetDir: strin
     } else if (resolution.resolvedIds.includes('database/mongodb')) {
       operations.push(...getDotnetMongoDbOperations());
     }
-  } else if (resolution.resolvedIds.includes('runtime/node')) {
+  } else if (normalizedConfig.backend.runtime === 'node') {
     if (resolution.resolvedIds.includes('database/postgresql')) {
       operations.push(...getNodePrismaOperations('postgresql'));
     } else if (resolution.resolvedIds.includes('database/sqlserver')) {
@@ -74,7 +74,7 @@ export async function scaffoldStack(config: StackConfiguration, targetDir: strin
     } else if (resolution.resolvedIds.includes('database/mongodb')) {
       operations.push(...getNodeMongoOperations());
     }
-  } else if (resolution.resolvedIds.includes('runtime/python')) {
+  } else if (normalizedConfig.backend.runtime === 'python') {
     if (resolution.resolvedIds.includes('database/postgresql')) {
       operations.push(...getPythonSqlAlchemyOperations('postgresql'));
     } else if (resolution.resolvedIds.includes('database/sqlserver')) {
