@@ -14,6 +14,7 @@ export * from './planner/types.js';
 export * from './planner/planner.js';
 export * from './planner/formatter.js';
 export * from './manifest/manifest.js';
+export * from './scaffolder.js';
 
 export function executeDryRun(options: { preset?: string; name?: string }): ExecutionPlan {
   const presetConfig = options.preset ? BUILTIN_PRESETS[options.preset] : BUILTIN_PRESETS['dotnet-clean-react'];
