@@ -161,3 +161,39 @@ describe('non-interactive selection validation', () => {
     ).toThrow('Unsupported architecture');
   });
 });
+
+describe('published product identity', () => {
+  it('retains the approved repository package and executable names', () => {
+    const packageManifest = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8'));
+
+    expect(packageManifest.name).toBe('@thienhn/create-template');
+    expect(packageManifest.bin).toEqual({
+      'create-template': './bin/create-template.js',
+      'create-p-stack': './bin/create-template.js',
+    });
+    expect(packageManifest.repository.url).toContain('ThienHN0910/Template-P.git');
+  });
+});
+
+describe('v2 selection surface', () => {
+  it.each([
+    ['dotnet', 'webapi-ddd'],
+    ['dotnet', 'webapi-mvc'],
+    ['dotnet', 'blank'],
+    ['node', 'express-ddd'],
+    ['node', 'fastify-clean'],
+    ['node', 'blank'],
+    ['fastapi', 'modular'],
+    ['fastapi', 'blank'],
+  ])('accepts %s with %s', (backend, architecture) => {
+    expect(() =>
+      assertSupportedProjectSelection({
+        backend,
+        architecture,
+        frontend: 'react',
+        database: 'none',
+        packageManager: 'pnpm',
+      })
+    ).not.toThrow();
+  });
+});
