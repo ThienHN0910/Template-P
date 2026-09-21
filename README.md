@@ -1,6 +1,10 @@
 # Template-P
 
-Template-P is the source repository for `@thienhn/create-template`, an interactive CLI and capability engine that scaffolds full-stack monorepos from verified blueprints and modular adapters.
+[![Case Study](https://img.shields.io/badge/Case_Study-Template--P-007ACC?style=flat-square&logo=vercel)](https://thienhn0910.vercel.app/projects/template-p-composable-cli-scaffolder-engine)
+[![Blog](https://img.shields.io/badge/Blog-Building_Template--P-orange?style=flat-square)](https://thienhn0910.vercel.app/blog/building-template-p-scaffolding-monorepos-with-npx)
+[![Author](https://img.shields.io/badge/Author-thienhn0910-4FC08D?style=flat-square)](https://thienhn0910.vercel.app/)
+
+Template-P is the source repository for `@thienhn/create-template`, an interactive CLI and capability engine that scaffolds full-stack monorepos from verified blueprints and modular adapters. Developed and maintained by [Thien Nguyen](https://thienhn0910.vercel.app/).
 
 ## Quick start
 
@@ -78,6 +82,13 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Report vu
 ## v3 architecture
 
 The v3 capability architecture is detailed in the [design specification](docs/superpowers/specs/2026-09-16-template-p-v3-capability-architecture-design.md).
+
+## 🌐 Case Study & Technical Blog
+
+- 📌 **Project Case Study**: [Template-P Composable CLI Scaffolder Engine](https://thienhn0910.vercel.app/projects/template-p-composable-cli-scaffolder-engine)
+- 📖 **Deep-Dive Engineering Post**: [Building Template-P: Scaffolding Monorepos with NPX](https://thienhn0910.vercel.app/blog/building-template-p-scaffolding-monorepos-with-npx)
+- 👨‍💻 **Author Portfolio**: [thienhn0910.vercel.app](https://thienhn0910.vercel.app/)
+- 🚀 **Explore More Projects**: [Portfolio Projects Showcase](https://thienhn0910.vercel.app/projects)
 
 ## License
 
