@@ -1,10 +1,10 @@
 # Template-P
 
-[![Case Study](https://img.shields.io/badge/Case_Study-Template--P-007ACC?style=flat-square&logo=vercel)](https://thienhn0910.vercel.app/projects/template-p-composable-cli-scaffolder-engine)
-[![Blog](https://img.shields.io/badge/Blog-Building_Template--P-orange?style=flat-square)](https://thienhn0910.vercel.app/blog/building-template-p-scaffolding-monorepos-with-npx)
-[![Author](https://img.shields.io/badge/Author-ThienHN-4FC08D?style=flat-square)](https://thienhn0910.vercel.app/)
+[![Case Study](https://img.shields.io/badge/Case_Study-Template--P-007ACC?style=flat-square&logo=vercel)](https://thienhn.io.vn/projects/template-p-composable-cli-scaffolder-engine)
+[![Blog](https://img.shields.io/badge/Blog-Building_Template--P-orange?style=flat-square)](https://thienhn.io.vn/blog/building-template-p-scaffolding-monorepos-with-npx)
+[![Author](https://img.shields.io/badge/Author-ThienHN-4FC08D?style=flat-square)](https://thienhn.io.vn/)
 
-Template-P is the source repository for `@thienhn/create-template`, an interactive CLI and capability engine that scaffolds full-stack monorepos from verified blueprints and modular adapters. Developed and maintained by [ThienHN](https://thienhn0910.vercel.app/).
+Template-P is the source repository for `@thienhn/create-template`, an interactive CLI and capability engine that scaffolds full-stack monorepos from verified blueprints and modular adapters. Developed and maintained by [ThienHN](https://thienhn.io.vn/).
 
 ## Quick start
 
@@ -85,10 +85,10 @@ The v3 capability architecture is detailed in the [design specification](docs/su
 
 ## 🌐 Case Study & Technical Blog
 
-- 📌 **Project Case Study**: [Template-P Composable CLI Scaffolder Engine](https://thienhn0910.vercel.app/projects/template-p-composable-cli-scaffolder-engine)
-- 📖 **Deep-Dive Engineering Post**: [Building Template-P: Scaffolding Monorepos with NPX](https://thienhn0910.vercel.app/blog/building-template-p-scaffolding-monorepos-with-npx)
-- 👨‍💻 **Author Portfolio**: [ThienHN (thienhn0910.vercel.app)](https://thienhn0910.vercel.app/)
-- 🚀 **Explore More Projects**: [Portfolio Projects Showcase](https://thienhn0910.vercel.app/projects)
+- 📌 **Project Case Study**: [Template-P Composable CLI Scaffolder Engine](https://thienhn.io.vn/projects/template-p-composable-cli-scaffolder-engine)
+- 📖 **Deep-Dive Engineering Post**: [Building Template-P: Scaffolding Monorepos with NPX](https://thienhn.io.vn/blog/building-template-p-scaffolding-monorepos-with-npx)
+- 👨‍💻 **Author Portfolio**: [ThienHN (thienhn0910.vercel.app)](https://thienhn.io.vn/)
+- 🚀 **Explore More Projects**: [Portfolio Projects Showcase](https://thienhn.io.vn/projects)
 
 ## License
 
